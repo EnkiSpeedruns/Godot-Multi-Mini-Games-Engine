@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://bqwkso8c72mjy"]
+
+[ext_resource type="Script" uid="uid://bnaulb6l2da66" path="res://Scenes/MainMenu/UI/game_button.gd" id="1_j82al"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_j82al"]
+
+[node name="GameButton" type="PanelContainer" unique_id=643108795]
+custom_minimum_size = Vector2(200, 250)
+size_flags_horizontal = 3
+size_flags_vertical = 0
+script = ExtResource("1_j82al")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=708801344]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1051855260]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ThumbnailRect" type="TextureRect" parent="MarginContainer/VBoxContainer" unique_id=2051575993]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="NameLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1044343085]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Game Name"
+horizontal_alignment = 1
+
+[node name="DescriptionLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=259216390]
+custom_minimum_size = Vector2(100, 16)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Description"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="HighScoreLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=69256451]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "High Score: 0"
+horizontal_alignment = 1
+
+[node name="ClickButton" type="Button" parent="." unique_id=1031475359]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_j82al")
+
+[connection signal="pressed" from="ClickButton" to="." method="_on_click_button_pressed"]

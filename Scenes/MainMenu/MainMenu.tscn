@@ -1,0 +1,60 @@
+[gd_scene format=3 uid="uid://bo8yimqog7fe7"]
+
+[ext_resource type="Theme" uid="uid://bsy0tpqj1ds4i" path="res://Resources/Themes/main_theme.tres" id="1_c7oo3"]
+[ext_resource type="Script" uid="uid://44suru4t5ft8" path="res://Scenes/MainMenu/main_menu.gd" id="1_cdkru"]
+
+[node name="MainMenu" type="Control" unique_id=895796201]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_c7oo3")
+script = ExtResource("1_cdkru")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1095255150]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 50
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=684970921]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="TileLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1884451699]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Multi Minigames Engine"
+horizontal_alignment = 1
+
+[node name="MinigamesContainer" type="GridContainer" parent="MarginContainer/VBoxContainer" unique_id=1974659200]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 20
+columns = 3
+
+[node name="SettingsButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=364364000]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 32
+text = "Settings"
+
+[node name="QuitButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=142476207]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 32
+text = "Quit"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/SettingsButton" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]

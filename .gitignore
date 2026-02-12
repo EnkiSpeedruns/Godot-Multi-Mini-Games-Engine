@@ -1,0 +1,38 @@
+# Godot specific
+/.import/
+*.import
+/.godot/
+export_presets.cfg
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Editor data
+*.godot
+
+# Imported assets (optional to track, usually ignored)
+*.obj
+*.fbx
+*.blend
+*.blend1
+*.blend2
+
+# Backup files
+*~
+*.tmp
+*.old
+*.orig
+
+# Godot Mono (if using C#)
+/.mono/
+*.csproj
+*.sln
+*.user
+*.userprefs
+
+# Export
+*.exe
+*.pck
+*.zip
+EOF
