@@ -86,7 +86,8 @@ res://
 
 💡 ¿Primera vez con Godot 4? Revisa la guía de inicio rápido (próximamente).
 
-🤝 ¿Cómo Contribuir?
+### 🤝 ¿Cómo Contribuir?
+
 ¡Este proyecto vive de la comunidad! Toda ayuda suma, sin importar tu nivel:
 
 . 🐛 Reporta bugs o problemas de arquitectura.
@@ -101,7 +102,8 @@ res://
 
 Revisa la guía de contribución (próximamente) y nuestro código de conducta.
 
-📚 Aprendizaje y Contexto
+### 📚 Aprendizaje y Contexto
+
 Este proyecto nace como una forma práctica de aprender Godot 4 en profundidad, aplicando patrones de diseño y buenas prácticas desde el día cero.
 
 Cada decisión de arquitectura está explicada en la hoja de ruta.
@@ -110,10 +112,12 @@ Ideal para quienes ya hicieron algunos tutoriales y quieren dar el salto a proye
 
 También es útil para enseñar en entornos educativos (bootcamps, talleres, aulas).
 
-📄 Licencia
+### 📄 Licencia
+
 Distribuido bajo licencia MIT. Ver LICENSE para más información.
 
-🌟 Apoya el Proyecto
+### 🌟 Apoya el Proyecto
+
 ⭐ Dale estrella al repo — me ayuda a saber que esto es útil.
 
 🐦 Comparte en redes: #GodotEngine #Minigames #OpenSource
