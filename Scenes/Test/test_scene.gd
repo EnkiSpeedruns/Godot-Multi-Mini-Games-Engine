@@ -1,6 +1,7 @@
 extends Control
 
 ## TEST SCENE - Para probar transiciones del SceneTransition
+## Solo incluye las transiciones que funcionan: instant, fade, wipe_left, wipe_right
 
 @onready var back_button: Button = $MarginContainer/VBoxContainer/BackButton
 @onready var transition_type_label: Label = $MarginContainer/VBoxContainer/TransitionTypeLabel
@@ -9,13 +10,10 @@ var transition_types: Array[String] = [
 	"instant",
 	"fade",
 	"wipe_left",
-	"wipe_right",
-	"pixelate",
-	"circle_close",
-	"circle_open"
+	"wipe_right"
 ]
 
-var current_type_index: int = 0
+var current_type_index: int = 1  # Empezar con "fade"
 
 func _ready() -> void:
 	_update_label()

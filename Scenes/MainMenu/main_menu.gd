@@ -6,6 +6,13 @@ extends Control
 
 func _ready() -> void:
 	_populate_minigames()
+	
+	# FIX: Conectar señales de transición en _ready para evitar duplicados
+	# Solo conectar si no están ya conectadas
+	if not SceneTransition.transition_started.is_connected(_on_transition_started):
+		SceneTransition.transition_started.connect(_on_transition_started)
+	if not SceneTransition.transition_finished.is_connected(_on_transition_finished):
+		SceneTransition.transition_finished.connect(_on_transition_finished)
 
 ## Crea un GameButton por cada minijuego registrado en GameManager
 func _populate_minigames() -> void:
@@ -29,7 +36,7 @@ func _populate_minigames() -> void:
 		button.description = game_data.description
 		button.high_score = game_data.high_score
 		button.is_locked = !game_data.unlocked
-		# button.thumbnail = load(game_data.thumbnail) cuando tengamos imágenes
+		# button.thumbnail = load(game_data.thumbnail) # cuando tengamos imágenes
 		
 		# Conectar señal
 		button.game_selected.connect(_on_game_selected)
@@ -50,34 +57,34 @@ func _on_game_selected(game_id: String) -> void:
 		push_error("Game data not found for id: %s" % game_id)
 		return
 
-	# TODO: Usar SceneTransition para cambiar de escena
-	# Tipos disponibles: "instant", "fade", "wipe_left", "wipe_right", "pixelate", "circle_close", "circle_open"
+	# Usar SceneTransition para cambiar de escena
+	# Tipos disponibles: "instant", "fade", "wipe_left", "wipe_right"
 	SceneTransition.change_scene(game_data.scene_path, "fade", false)
-	
-	# Temporal - solo imprimir
-	print("Would load scene: %s" % game_data.scene_path)
 
 ## Callback del botón Settings
 func _on_settings_button_pressed() -> void:
-	print("Settings clicked - TODO")
-	# Cambiar a escena settings cuando este creada
-	# SceneTransition.change_scene("", "fade")
+	print("Opening Settings...")
+	SceneTransition.change_scene("res://Scenes/MainMenu/SettingsMenu.tscn", "wipe_left")
 
+## Callback del botón Quit
 func _on_quit_button_pressed() -> void:
-	SceneTransition.transition_midpoint.connect(func(): get_tree().quit())
-	SceneTransition.change_scene("", "fade")  # Fade a negro y salir
+	print("Quitting game...")
+	# FIX: Usar una función lambda inline que se desconecta a sí misma
+	var quit_callback = func():
+		get_tree().quit()
+	
+	# Conectar, esperar a que se ejecute, y desconectar
+	SceneTransition.transition_midpoint.connect(quit_callback, CONNECT_ONE_SHOT)
+	SceneTransition.change_scene("", "fade")
 
-## Opcional: Callback cuando inicia una transición
+## Callback cuando inicia una transición
 func _on_transition_started(transition_type: String) -> void:
 	# Deshabilitar inputs mientras transiciona
 	set_process_input(false)
-	
-	# Opcional: Feedback visual (ej: cursor de loading)
-	print("Transition started: %s" % transition_type)
+	print("🎬 Transition started: %s" % transition_type)
 
-## Opcional: Callback cuando termina una transición
+## Callback cuando termina una transición
 func _on_transition_finished() -> void:
 	# Re-habilitar inputs
 	set_process_input(true)
-	
-	print("Transition finished")
+	print("✅ Transition finished")
