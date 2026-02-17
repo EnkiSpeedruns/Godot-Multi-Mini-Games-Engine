@@ -1,0 +1,83 @@
+[gd_scene format=3 uid="uid://es2r7a2bwp1g"]
+
+[ext_resource type="Script" uid="uid://cqi87618b14bd" path="res://Scenes/Minigames/Platformer/Enemies/Flyer/flyer.gd" id="1_tsvme"]
+[ext_resource type="Texture2D" uid="uid://clqa8btouw3d8" path="res://Scenes/Minigames/Platformer/Resources/Sprites/spritesheet-enemies-default.png" id="2_u7r0k"]
+[ext_resource type="PackedScene" uid="uid://cdxtjgcdkdq2v" path="res://Components/HealthComponent/HealthComponent.tscn" id="3_a2i7w"]
+[ext_resource type="PackedScene" uid="uid://uj7rukar7v3r" path="res://Components/HurtboxComponent/HurtboxComponent.tscn" id="4_wv2ui"]
+[ext_resource type="PackedScene" uid="uid://ctyxbyrktye4n" path="res://Components/HitBoxComponent/HitboxComponent.tscn" id="5_ej4la"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hjlss"]
+atlas = ExtResource("2_u7r0k")
+region = Rect2(195, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_opqi4"]
+atlas = ExtResource("2_u7r0k")
+region = Rect2(260, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_l4fdg"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hjlss")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_opqi4")
+}],
+"loop": true,
+"name": &"default",
+"speed": 7.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2g3kp"]
+size = Vector2(53, 27)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_24lq0"]
+size = Vector2(57, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_u7r0k"]
+size = Vector2(57, 29)
+
+[node name="Flyer" type="CharacterBody2D" unique_id=284525274]
+script = ExtResource("1_tsvme")
+move_speed = 150.0
+patrol_distance = 400.0
+wave_frequency = 4.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1221884910]
+sprite_frames = SubResource("SpriteFrames_l4fdg")
+frame_progress = 0.52841455
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1517377208]
+position = Vector2(0.5, 5.5)
+shape = SubResource("RectangleShape2D_2g3kp")
+
+[node name="WallRay" type="RayCast2D" parent="." unique_id=2015320035]
+position = Vector2(-1, 14)
+target_position = Vector2(37, 0)
+
+[node name="WallRay2" type="RayCast2D" parent="." unique_id=1015634048]
+position = Vector2(-1, 14)
+target_position = Vector2(-34, 0)
+
+[node name="HealthComponent" parent="." unique_id=1334102346 instance=ExtResource("3_a2i7w")]
+max_health = 1
+
+[node name="HurtboxComponent" parent="." unique_id=1169181295 instance=ExtResource("4_wv2ui")]
+collision_layer = 32
+collision_mask = 8
+health_component_path = NodePath("../HealthComponent")
+entity_category = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtboxComponent" unique_id=1678493930]
+position = Vector2(0.5, 0)
+shape = SubResource("RectangleShape2D_24lq0")
+
+[node name="AttackHitbox" parent="." unique_id=10737182 instance=ExtResource("5_ej4la")]
+collision_layer = 64
+collision_mask = 4
+damage = 1
+can_hit = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitbox" unique_id=1889725801]
+position = Vector2(0.5, 6.5)
+shape = SubResource("RectangleShape2D_u7r0k")

@@ -52,7 +52,7 @@ func _ready() -> void:
 ## @param transition_type_name: Nombre del tipo de transición ("fade", "wipe_left", "wipe_right", "instant")
 ## @param show_loading: Si mostrar el texto "Loading..."
 func change_scene(
-	scene_path: String, 
+	scene_path: String,
 	transition_type_name: String = "fade",
 	show_loading: bool = false
 ) -> void:
@@ -125,6 +125,9 @@ func _play_transition_in() -> void:
 ## Callback cuando termina la animación de salida
 func _on_transition_out_complete() -> void:
 	transition_midpoint.emit()
+	
+	if _target_scene_path.is_empty():
+		return
 	
 	if use_async_loading:
 		_load_scene_async()

@@ -1,0 +1,80 @@
+[gd_scene format=3 uid="uid://binnbm1ko73f0"]
+
+[ext_resource type="Script" uid="uid://dug12iwmfiq3" path="res://Scenes/Minigames/Platformer/Enemies/Fish/fish.gd" id="1_fbhq8"]
+[ext_resource type="PackedScene" uid="uid://cdxtjgcdkdq2v" path="res://Components/HealthComponent/HealthComponent.tscn" id="2_en6ru"]
+[ext_resource type="Texture2D" uid="uid://clqa8btouw3d8" path="res://Scenes/Minigames/Platformer/Resources/Sprites/spritesheet-enemies-default.png" id="2_n2y6p"]
+[ext_resource type="PackedScene" uid="uid://uj7rukar7v3r" path="res://Components/HurtboxComponent/HurtboxComponent.tscn" id="4_n2y6p"]
+[ext_resource type="PackedScene" uid="uid://ctyxbyrktye4n" path="res://Components/HitBoxComponent/HitboxComponent.tscn" id="5_1a3co"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_570fh"]
+atlas = ExtResource("2_n2y6p")
+region = Rect2(195, 65, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1a3co"]
+atlas = ExtResource("2_n2y6p")
+region = Rect2(65, 65, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_lc2re"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_570fh")
+}],
+"loop": true,
+"name": &"down",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1a3co")
+}],
+"loop": true,
+"name": &"up",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_en6ru"]
+size = Vector2(26, 46)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1a3co"]
+size = Vector2(28, 49)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_570fh"]
+size = Vector2(28, 49)
+
+[node name="Fish" type="Area2D" unique_id=1882048728]
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("1_fbhq8")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1280631440]
+sprite_frames = SubResource("SpriteFrames_lc2re")
+animation = &"down"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=700429727]
+position = Vector2(0, 1)
+shape = SubResource("RectangleShape2D_en6ru")
+
+[node name="HealthComponent" parent="." unique_id=1334102346 instance=ExtResource("2_en6ru")]
+max_health = 1
+
+[node name="HurtboxComponent" parent="." unique_id=1169181295 instance=ExtResource("4_n2y6p")]
+collision_layer = 32
+collision_mask = 8
+health_component_path = NodePath("../HealthComponent")
+entity_category = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtboxComponent" unique_id=1811787997]
+position = Vector2(0, 0.5)
+shape = SubResource("RectangleShape2D_1a3co")
+
+[node name="AttackHitbox" parent="." unique_id=10737182 instance=ExtResource("5_1a3co")]
+collision_layer = 64
+collision_mask = 4
+damage = 1
+auto_activate = false
+can_hit = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitbox" unique_id=985499442]
+position = Vector2(0, 0.5)
+shape = SubResource("RectangleShape2D_570fh")

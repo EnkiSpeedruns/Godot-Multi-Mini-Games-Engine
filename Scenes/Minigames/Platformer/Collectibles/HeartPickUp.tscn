@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://dstkamcnbgx0f"]
+
+[ext_resource type="Script" uid="uid://b4htogo7bnvj8" path="res://Scenes/Minigames/Platformer/Collectibles/heart_pick_up.gd" id="1_81ail"]
+[ext_resource type="Texture2D" uid="uid://csakq16p0oj2t" path="res://Scenes/Minigames/Platformer/Resources/Tile Sets/spritesheet-tiles-default.png" id="1_bqhbc"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_81ail"]
+atlas = ExtResource("1_bqhbc")
+region = Rect2(585, 195, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ckr10"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_81ail")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4fdby"]
+radius = 20.024984
+
+[node name="HeartPickUp" type="Area2D" unique_id=1219037361]
+z_index = 60
+script = ExtResource("1_81ail")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=318698996]
+sprite_frames = SubResource("SpriteFrames_ckr10")
+animation = &"idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1225183177]
+shape = SubResource("CircleShape2D_4fdby")

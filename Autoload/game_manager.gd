@@ -96,35 +96,47 @@ func _load_save_data() -> void:
 		print("No save file found, creating new one")
 		_create_default_save()
 		return
-		
+	
 	# Cargar high score y estado de unlocked para cada juego
 	for game in minigames:
 		var game_id = game.id
 		
-		# Cargar high score
 		if save_file.has_section_key("scores", game_id):
 			game.high_score = save_file.get_value("scores", game_id, 0)
 		
-		# Cargar estado de unlock
 		if save_file.has_section_key("unlocked", game_id):
 			game.unlocked = save_file.get_value("unlocked", game_id, false)
-		
-		print("Save data loaded successfully")
+	
+	# --- IMPORTANTE: Inicializar settings si no existen ---
+	if !save_file.has_section("settings"):
+		print("Settings section not found, creating defaults")
+		save_file.set_value("settings", "display_mode", DisplayServer.WINDOW_MODE_WINDOWED)
+		save_file.set_value("settings", "display_resolution", Vector2i(1920, 1080))
+		save_file.set_value("settings", "display_vsync", true)
+		save_file.set_value("settings", "master_volume", 1.0)
+		save_file.set_value("settings", "music_volume", 0.8)
+		save_file.set_value("settings", "sfx_volume", 1.0)
+		_save_data()
+	
+	print("Save data loaded successfully")
 
 # Crear archivo de guardado por defecto
 func _create_default_save() -> void:
-	# Guardar valores iniciales
+	# Guardar valores iniciales de juegos
 	for game in minigames:
 		save_file.set_value("scores", game.id, game.high_score)
 		save_file.set_value("unlocked", game.id, game.unlocked)
-
-	# Configuracion por defecto
+	
+	# --- IMPORTANTE: Guardar TODOS los settings por defecto ---
+	save_file.set_value("settings", "display_mode", DisplayServer.WINDOW_MODE_WINDOWED)
+	save_file.set_value("settings", "display_resolution", Vector2i(1920, 1080))
+	save_file.set_value("settings", "display_vsync", true)
 	save_file.set_value("settings", "master_volume", 1.0)
 	save_file.set_value("settings", "music_volume", 0.8)
 	save_file.set_value("settings", "sfx_volume", 1.0)
-
+	
 	save_file.save(SAVE_FILE_PATH)
-	print("Default save file creted")
+	print("Default save file created with all settings")
 
 func _save_data() -> void:
 	save_file.save(SAVE_FILE_PATH)

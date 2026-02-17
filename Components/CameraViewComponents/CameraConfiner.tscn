@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cfaqhbrr0xqso"]
+
+[ext_resource type="Script" uid="uid://dr1x8x52pwvnn" path="res://Components/CameraViewComponents/camera_confiner.gd" id="1_i7u5f"]
+
+[node name="CameraConfiner" type="Node2D" unique_id=295164586]
+script = ExtResource("1_i7u5f")

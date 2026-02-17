@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://bwl6gpp2dw5ps"]
+
+[ext_resource type="Script" uid="uid://dio3xqgukw7se" path="res://Scenes/Minigames/Platformer/Enemies/Spikes/spikes.gd" id="1_8wdl6"]
+[ext_resource type="Texture2D" uid="uid://clqa8btouw3d8" path="res://Scenes/Minigames/Platformer/Resources/Sprites/spritesheet-enemies-default.png" id="2_707w3"]
+[ext_resource type="PackedScene" uid="uid://ctyxbyrktye4n" path="res://Components/HitBoxComponent/HitboxComponent.tscn" id="3_qico3"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qico3"]
+atlas = ExtResource("2_707w3")
+region = Rect2(390, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ypxmp"]
+atlas = ExtResource("2_707w3")
+region = Rect2(455, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_3mjjy"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qico3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ypxmp")
+}],
+"loop": true,
+"name": &"default",
+"speed": 7.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_707w3"]
+size = Vector2(36, 39)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ypxmp"]
+size = Vector2(36, 31)
+
+[node name="Spikes" type="StaticBody2D" unique_id=603411778]
+script = ExtResource("1_8wdl6")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=228936978]
+sprite_frames = SubResource("SpriteFrames_3mjjy")
+frame_progress = 0.1707628
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=562102189]
+position = Vector2(0, 12.5)
+shape = SubResource("RectangleShape2D_707w3")
+
+[node name="Hitbox" parent="." unique_id=10737182 instance=ExtResource("3_qico3")]
+collision_layer = 64
+collision_mask = 4
+damage = 1
+can_hit = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=883575970]
+position = Vector2(0, -5.5)
+shape = SubResource("RectangleShape2D_ypxmp")

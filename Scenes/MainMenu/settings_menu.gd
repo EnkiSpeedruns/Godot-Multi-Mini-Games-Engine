@@ -1,8 +1,9 @@
 extends Control
 
-## SettingsMenu - Menú de configuración
+## SettingsMenu - Menú de configuración con audio integrado
 ##
 ## Permite cambiar display mode, resolución, y audio
+## La música continúa desde el Main Menu
 
 # Referencias a nodos UI - Display
 @onready var display_mode_option: OptionButton = $Panel/MarginContainer/VBoxContainer/DisplaySection/DisplayModeOption
@@ -28,13 +29,40 @@ var temp_display_mode: DisplayServer.WindowMode
 var temp_resolution: Vector2i
 var temp_vsync: bool
 
+# Recursos de audio
+var hover_sound: AudioStream
+var click_sound: AudioStream
+var switch_sound: AudioStream
+var apply_sound: AudioStream
+
 func _ready() -> void:
+	_load_audio_resources()
 	_populate_display_options()
 	_populate_resolution_options()
 	_load_current_settings()
 	_connect_signals()
+	_setup_button_sounds()
 	
 	print("SettingsMenu ready")
+	print("Music continues from Main Menu")
+
+## Carga los recursos de audio
+func _load_audio_resources() -> void:
+	hover_sound = load("res://Resources/Audio/SFX/tap-a.ogg")
+	click_sound = load("res://Resources/Audio/SFX/click-a.ogg")
+	switch_sound = load("res://Resources/Audio/SFX/switch-a.ogg")
+	apply_sound = load("res://Resources/Audio/SFX/click-b.ogg")
+
+## Configura sonidos para botones y controles
+func _setup_button_sounds() -> void:
+	# Botones principales
+	apply_button.mouse_entered.connect(_on_button_hover)
+	reset_button.mouse_entered.connect(_on_button_hover)
+	back_button.mouse_entered.connect(_on_button_hover)
+	
+	# OptionButtons
+	display_mode_option.mouse_entered.connect(_on_button_hover)
+	resolution_option.mouse_entered.connect(_on_button_hover)
 
 ## Puebla las opciones de display mode
 func _populate_display_options() -> void:
@@ -110,17 +138,20 @@ func _connect_signals() -> void:
 ## Callback cuando cambia display mode
 func _on_display_mode_selected(index: int) -> void:
 	temp_display_mode = display_mode_option.get_item_id(index)
+	AudioManager.play_sfx(switch_sound, -6.0)
 	print("Display mode selected: %s" % temp_display_mode)
 
 ## Callback cuando cambia resolución
 func _on_resolution_selected(index: int) -> void:
 	var resolutions = SettingsManager.get_available_resolutions()
 	temp_resolution = resolutions[index]
+	AudioManager.play_sfx(switch_sound, -6.0)
 	print("Resolution selected: %dx%d" % [temp_resolution.x, temp_resolution.y])
 
 ## Callback cuando cambia VSync
 func _on_vsync_toggled(toggled_on: bool) -> void:
 	temp_vsync = toggled_on
+	AudioManager.play_sfx(switch_sound, -6.0)
 	print("VSync: %s" % toggled_on)
 
 ## Callback cuando cambia master volume
@@ -128,18 +159,29 @@ func _on_master_slider_changed(value: float) -> void:
 	var volume = value / 100.0
 	SettingsManager.set_master_volume(volume)
 	_update_volume_labels()
+	
+	# Reproducir sonido de prueba al cambiar volumen
+	_play_volume_test_sound()
 
 ## Callback cuando cambia music volume
 func _on_music_slider_changed(value: float) -> void:
 	var volume = value / 100.0
 	SettingsManager.set_music_volume(volume)
 	_update_volume_labels()
+	# La música que está sonando reflejará el cambio inmediatamente
 
 ## Callback cuando cambia SFX volume
 func _on_sfx_slider_changed(value: float) -> void:
 	var volume = value / 100.0
 	SettingsManager.set_sfx_volume(volume)
 	_update_volume_labels()
+	
+	# Reproducir sonido de prueba al cambiar volumen
+	_play_volume_test_sound()
+
+## Reproduce un sonido de prueba para testear volumen
+func _play_volume_test_sound() -> void:
+	AudioManager.play_sfx(click_sound, -3.0)
 
 ## Actualiza los labels de volumen
 func _update_volume_labels() -> void:
@@ -153,6 +195,9 @@ func _update_volume_labels() -> void:
 ## Aplica los cambios de display
 func _on_apply_pressed() -> void:
 	print("Applying settings...")
+	
+	# Sonido de confirmación
+	AudioManager.play_sfx(apply_sound)
 	
 	# Aplicar display settings
 	SettingsManager.set_display_mode(temp_display_mode)
@@ -171,13 +216,23 @@ func _on_apply_pressed() -> void:
 ## Resetea a valores por defecto
 func _on_reset_pressed() -> void:
 	print("Resetting to defaults...")
+	
+	AudioManager.play_sfx(click_sound)
+	
 	SettingsManager.reset_to_defaults()
 	_load_current_settings()
+	
 	print("Settings reset!")
 
 ## Vuelve al main menu
 func _on_back_pressed() -> void:
+	AudioManager.play_sfx(click_sound)
+	# La música continúa al volver al Main Menu
 	SceneTransition.change_scene("res://Scenes/MainMenu/MainMenu.tscn", "wipe_right")
+
+## Sonido de hover sobre botón
+func _on_button_hover() -> void:
+	AudioManager.play_sfx(hover_sound, -8.0)
 
 ## Calcula aspect ratio
 func _get_aspect_ratio(resolution: Vector2i) -> String:

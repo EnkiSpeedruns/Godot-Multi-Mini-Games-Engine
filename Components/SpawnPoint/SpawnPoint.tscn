@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bqmljpasq8252"]
+
+[ext_resource type="Script" uid="uid://ceyiv6k5rseqk" path="res://Components/SpawnPoint/spawn_point.gd" id="1_4s8fm"]
+
+[node name="SpawnPoint" type="Marker2D" unique_id=2142692905]
+script = ExtResource("1_4s8fm")

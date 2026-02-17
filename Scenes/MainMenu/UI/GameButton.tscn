@@ -4,6 +4,16 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_j82al"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qsqfn"]
+bg_color = Color(0.47772512, 0.47772512, 0.47772512, 0.307)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j82al"]
+bg_color = Color(0.60038817, 0.60038817, 0.60038817, 0.307)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4ejwe"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_w74eu"]
+
 [node name="GameButton" type="PanelContainer" unique_id=643108795]
 custom_minimum_size = Vector2(200, 250)
 size_flags_horizontal = 3
@@ -50,5 +60,9 @@ horizontal_alignment = 1
 [node name="ClickButton" type="Button" parent="." unique_id=1031475359]
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxEmpty_j82al")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_qsqfn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_j82al")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_4ejwe")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_w74eu")
 
 [connection signal="pressed" from="ClickButton" to="." method="_on_click_button_pressed"]

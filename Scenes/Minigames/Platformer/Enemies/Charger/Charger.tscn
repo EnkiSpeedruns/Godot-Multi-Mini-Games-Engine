@@ -1,0 +1,90 @@
+[gd_scene format=3 uid="uid://dtoy3w076j7ix"]
+
+[ext_resource type="Texture2D" uid="uid://clqa8btouw3d8" path="res://Scenes/Minigames/Platformer/Resources/Sprites/spritesheet-enemies-default.png" id="1_2t4i5"]
+[ext_resource type="Script" uid="uid://ce3qfk2sknqbx" path="res://Scenes/Minigames/Platformer/Enemies/Charger/charger.gd" id="1_v4r4n"]
+[ext_resource type="PackedScene" uid="uid://cdxtjgcdkdq2v" path="res://Components/HealthComponent/HealthComponent.tscn" id="2_4mfpp"]
+[ext_resource type="PackedScene" uid="uid://uj7rukar7v3r" path="res://Components/HurtboxComponent/HurtboxComponent.tscn" id="3_oeldi"]
+[ext_resource type="PackedScene" uid="uid://ctyxbyrktye4n" path="res://Components/HitBoxComponent/HitboxComponent.tscn" id="4_rr4ql"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oeldi"]
+atlas = ExtResource("1_2t4i5")
+region = Rect2(130, 260, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rr4ql"]
+atlas = ExtResource("1_2t4i5")
+region = Rect2(195, 260, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4mfpp"]
+atlas = ExtResource("1_2t4i5")
+region = Rect2(325, 260, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_v4r4n"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oeldi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rr4ql")
+}],
+"loop": true,
+"name": &"charge",
+"speed": 7.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4mfpp")
+}],
+"loop": true,
+"name": &"crash",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nboab"]
+size = Vector2(40, 60)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rr4ql"]
+size = Vector2(40, 42)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_v4r4n"]
+size = Vector2(44, 60)
+
+[node name="Charger" type="CharacterBody2D" unique_id=1103128496]
+script = ExtResource("1_v4r4n")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=384777149]
+sprite_frames = SubResource("SpriteFrames_v4r4n")
+animation = &"crash"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=244983114]
+position = Vector2(0, 2)
+shape = SubResource("RectangleShape2D_nboab")
+
+[node name="WallRay" type="RayCast2D" parent="." unique_id=1485158828]
+target_position = Vector2(30, 1)
+
+[node name="WallRay2" type="RayCast2D" parent="." unique_id=2080235227]
+target_position = Vector2(-30, 0)
+
+[node name="HealthComponent" parent="." unique_id=1334102346 instance=ExtResource("2_4mfpp")]
+max_health = 1
+
+[node name="HurtboxComponent" parent="." unique_id=1169181295 instance=ExtResource("3_oeldi")]
+collision_layer = 32
+collision_mask = 8
+health_component_path = NodePath("../HealthComponent")
+entity_category = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtboxComponent" unique_id=2135650327]
+position = Vector2(0, -11)
+shape = SubResource("RectangleShape2D_rr4ql")
+
+[node name="AttackHitbox" parent="." unique_id=10737182 instance=ExtResource("4_rr4ql")]
+collision_layer = 64
+collision_mask = 4
+damage = 1
+can_hit = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitbox" unique_id=854953845]
+position = Vector2(0, 2)
+shape = SubResource("RectangleShape2D_v4r4n")

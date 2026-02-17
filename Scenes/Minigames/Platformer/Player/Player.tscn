@@ -1,0 +1,158 @@
+[gd_scene format=3 uid="uid://buv1b8wh4f64v"]
+
+[ext_resource type="Script" uid="uid://bu104gynonrmg" path="res://Scenes/Minigames/Platformer/Player/player.gd" id="1_teqqs"]
+[ext_resource type="Texture2D" uid="uid://gcx6mkt8q0tg" path="res://Scenes/Minigames/Platformer/Resources/Sprites/spritesheet-characters-default.png" id="2_1ahp4"]
+[ext_resource type="Script" uid="uid://bg5flagp7krm8" path="res://Scenes/Minigames/Platformer/Player/camera_2d.gd" id="3_fpgny"]
+[ext_resource type="PackedScene" uid="uid://cdxtjgcdkdq2v" path="res://Components/HealthComponent/HealthComponent.tscn" id="3_pdmle"]
+[ext_resource type="PackedScene" uid="uid://knsvcusy1y5y" path="res://Components/InputBufferComponent/InputBufferComponent.tscn" id="4_iysjv"]
+[ext_resource type="PackedScene" uid="uid://uj7rukar7v3r" path="res://Components/HurtboxComponent/HurtboxComponent.tscn" id="5_vrrxw"]
+[ext_resource type="PackedScene" uid="uid://ctyxbyrktye4n" path="res://Components/HitBoxComponent/HitboxComponent.tscn" id="6_iysjv"]
+[ext_resource type="Script" uid="uid://dfh4rt4uc3ej7" path="res://Scenes/Minigames/Platformer/Player/States/state_machine.gd" id="7_nbi6e"]
+[ext_resource type="Script" uid="uid://dwqoaw32oww0x" path="res://Scenes/Minigames/Platformer/Player/States/idle.gd" id="8_c0dpq"]
+[ext_resource type="Script" uid="uid://cgxun6vsxm7ws" path="res://Scenes/Minigames/Platformer/Player/States/run.gd" id="9_fpgny"]
+[ext_resource type="Script" uid="uid://drie58thoy00h" path="res://Scenes/Minigames/Platformer/Player/States/jump.gd" id="10_fyq7y"]
+[ext_resource type="Script" uid="uid://x0y2a405mq0q" path="res://Scenes/Minigames/Platformer/Player/States/fall.gd" id="11_sf181"]
+[ext_resource type="Script" uid="uid://df2ifnf1lvard" path="res://Scenes/Minigames/Platformer/Player/States/hit.gd" id="12_c0dpq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fpgny"]
+atlas = ExtResource("2_1ahp4")
+region = Rect2(258, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yua1g"]
+atlas = ExtResource("2_1ahp4")
+region = Rect2(512, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wudvs"]
+atlas = ExtResource("2_1ahp4")
+region = Rect2(640, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pdmle"]
+atlas = ExtResource("2_1ahp4")
+region = Rect2(768, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iysjv"]
+atlas = ExtResource("2_1ahp4")
+region = Rect2(0, 128, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vrrxw"]
+atlas = ExtResource("2_1ahp4")
+region = Rect2(128, 128, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_nmkcy"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fpgny")
+}],
+"loop": true,
+"name": &"fall",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yua1g")
+}],
+"loop": true,
+"name": &"hit",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wudvs")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pdmle")
+}],
+"loop": true,
+"name": &"jump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iysjv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vrrxw")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 7.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_teqqs"]
+size = Vector2(36, 74)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nbi6e"]
+size = Vector2(41, 76)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_c0dpq"]
+size = Vector2(56, 28)
+
+[node name="Player" type="CharacterBody2D" unique_id=1032818968]
+z_index = 50
+script = ExtResource("1_teqqs")
+max_speed = 300.0
+jump_velocity = -700.0
+variable_jump_height = null
+min_jump_velocity = -50.0
+gravity = 900.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=759337342]
+sprite_frames = SubResource("SpriteFrames_nmkcy")
+animation = &"fall"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=670986198]
+position = Vector2(3, 27)
+shape = SubResource("RectangleShape2D_teqqs")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1957180978]
+script = ExtResource("3_fpgny")
+
+[node name="HealthComponent" parent="." unique_id=1334102346 instance=ExtResource("3_pdmle")]
+max_health = 3
+
+[node name="InputBufferComponent" parent="." unique_id=618950487 instance=ExtResource("4_iysjv")]
+
+[node name="HurtboxComponent" parent="." unique_id=1169181295 instance=ExtResource("5_vrrxw")]
+collision_layer = 4
+collision_mask = 64
+health_component_path = NodePath("../HealthComponent")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtboxComponent" unique_id=734795627]
+position = Vector2(3.5, 26)
+shape = SubResource("RectangleShape2D_nbi6e")
+
+[node name="StompHitbox" parent="." unique_id=10737182 instance=ExtResource("6_iysjv")]
+collision_layer = 8
+collision_mask = 32
+damage = 1
+knockback_force = Vector2(0, -300)
+auto_activate = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StompHitbox" unique_id=79464327]
+position = Vector2(5, 54)
+shape = SubResource("RectangleShape2D_c0dpq")
+
+[node name="StateMachine" type="Node" parent="." unique_id=1785434908]
+script = ExtResource("7_nbi6e")
+
+[node name="Idle" type="Node" parent="StateMachine" unique_id=993679610]
+script = ExtResource("8_c0dpq")
+
+[node name="Run" type="Node" parent="StateMachine" unique_id=505127205]
+script = ExtResource("9_fpgny")
+
+[node name="Jump" type="Node" parent="StateMachine" unique_id=385229924]
+script = ExtResource("10_fyq7y")
+
+[node name="Fall" type="Node" parent="StateMachine" unique_id=913222480]
+script = ExtResource("11_sf181")
+
+[node name="Hit" type="Node" parent="StateMachine" unique_id=2102870112]
+script = ExtResource("12_c0dpq")
+knockback_strength = Vector2(-400, -150)

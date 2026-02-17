@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://d3m82nbmxakhb"]
+
+[ext_resource type="Script" uid="uid://cdv7prnbpp0g8" path="res://Scenes/Minigames/Platformer/Rooms/room_base.gd" id="1_o2kyp"]
+
+[node name="RoomBase" type="Node2D" unique_id=1970645776]
+script = ExtResource("1_o2kyp")

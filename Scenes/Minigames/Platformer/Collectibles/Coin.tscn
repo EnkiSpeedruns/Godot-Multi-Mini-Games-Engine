@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://d3l3tvga3g2hj"]
+
+[ext_resource type="Script" uid="uid://bgphwawwevl8n" path="res://Scenes/Minigames/Platformer/Collectibles/coin.gd" id="1_cqf0s"]
+[ext_resource type="Texture2D" uid="uid://csakq16p0oj2t" path="res://Scenes/Minigames/Platformer/Resources/Tile Sets/spritesheet-tiles-default.png" id="2_empah"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_adx47"]
+atlas = ExtResource("2_empah")
+region = Rect2(0, 130, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kao32"]
+atlas = ExtResource("2_empah")
+region = Rect2(65, 130, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_afc2c"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_adx47")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kao32")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 7.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_n5gfa"]
+radius = 22.090721
+
+[node name="Coin" type="Area2D" unique_id=2015131063]
+z_index = 60
+script = ExtResource("1_cqf0s")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=31768169]
+sprite_frames = SubResource("SpriteFrames_afc2c")
+animation = &"idle"
+frame_progress = 0.039289884
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1227696429]
+shape = SubResource("CircleShape2D_n5gfa")

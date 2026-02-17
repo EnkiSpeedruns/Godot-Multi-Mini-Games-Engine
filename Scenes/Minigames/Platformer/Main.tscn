@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://cywso5fwmwxdc"]
+
+[ext_resource type="Script" uid="uid://drtmwt2uuy4r2" path="res://Scenes/Minigames/Platformer/game_logic.gd" id="1_en6ka"]
+[ext_resource type="PackedScene" uid="uid://bbbh14uv0310e" path="res://Scenes/Minigames/Platformer/UI/HUD.tscn" id="2_niqa6"]
+[ext_resource type="PackedScene" uid="uid://buv1b8wh4f64v" path="res://Scenes/Minigames/Platformer/Player/Player.tscn" id="3_e06ki"]
+[ext_resource type="PackedScene" uid="uid://cfaqhbrr0xqso" path="res://Components/CameraViewComponents/CameraConfiner.tscn" id="3_niqa6"]
+[ext_resource type="Script" uid="uid://qwdh201anovw" path="res://Scenes/Minigames/Platformer/Rooms/room_manager.gd" id="4_s5bhv"]
+
+[node name="Main" type="Node" unique_id=1090932]
+script = ExtResource("1_en6ka")
+
+[node name="Level" type="Node2D" parent="." unique_id=173178555]
+
+[node name="Player" parent="Level" unique_id=1032818968 instance=ExtResource("3_e06ki")]
+position = Vector2(770, 636)
+
+[node name="CameraConfiner" parent="Level" unique_id=295164586 instance=ExtResource("3_niqa6")]
+
+[node name="HUD" parent="." unique_id=1053451188 instance=ExtResource("2_niqa6")]
+
+[node name="RoomManager" type="Node" parent="." unique_id=1472411729]
+script = ExtResource("4_s5bhv")
