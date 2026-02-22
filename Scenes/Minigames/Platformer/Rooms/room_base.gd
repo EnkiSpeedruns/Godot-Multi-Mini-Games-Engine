@@ -1,15 +1,17 @@
 class_name PlatformerRoom
 extends Node2D
 
-## PlatformerRoom - VersiÃ³n Simple que Funcionaba + Scaling Discreto
+## PlatformerRoom - VersiÃƒÂ³n Simple que Funcionaba + Scaling Discreto
 
-# SeÃ±ales
+# SeÃƒÂ±ales
 signal room_completed()
 signal player_entered()
 signal all_spawns_completed()
 signal layout_selected(variant_index: int)
 
-# ConfiguraciÃ³n
+@export var exit_sound: AudioStream
+
+# ConfiguraciÃƒÂ³n
 @export_group("Room Info")
 @export_enum("Easy", "Medium", "Hard") var difficulty: String = "Easy"
 @export var room_width: float = 1024.0
@@ -36,7 +38,7 @@ var is_active: bool = false
 var player_has_entered: bool = false
 var rooms_cleared: int = 0
 
-# Valores discretos de HP/DaÃ±o (se setean desde RoomManager)
+# Valores discretos de HP/DaÃƒÂ±o (se setean desde RoomManager)
 var target_enemy_hp: int = 1
 var target_enemy_damage: int = 1
 
@@ -127,6 +129,8 @@ func activate() -> void:
 		return
 	
 	is_active = true
+	
+	
 	print("[Room %s] Activated" % room_id)
 
 func deactivate() -> void:
@@ -134,8 +138,14 @@ func deactivate() -> void:
 	print("[Room %s] Deactivated" % room_id)
 
 func _on_exit_trigger_entered(body: Node2D) -> void:
-	if body is Player and is_active:
-		call_deferred("_complete_room")
+	# Verificar Player primero para que el sonido suene en el momento correcto
+	if not body is Player or not is_active:
+		return
+	
+	if exit_sound:
+		AudioManager.play_sfx(exit_sound)
+	
+	call_deferred("_complete_room")
 
 func _complete_room() -> void:
 	room_completed.emit()

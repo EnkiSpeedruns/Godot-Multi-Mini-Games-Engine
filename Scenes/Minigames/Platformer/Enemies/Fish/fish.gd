@@ -3,6 +3,8 @@ extends Area2D
 
 ## Fish - Pez que salta del agua periódicamente
 
+@export var death_sound: AudioStream
+
 @export_group("Jump")
 @export var jump_height: float = 200.0
 @export var jump_duration: float = 0.8
@@ -112,7 +114,8 @@ func _on_hit_received(hit_data: Dictionary) -> void:
 func _on_died() -> void:
 	if is_dead:
 		return
-
+	if death_sound:
+		AudioManager.play_sfx(death_sound)
 	is_dead = true
 	is_jumping = false
 

@@ -1,0 +1,161 @@
+[gd_scene format=4 uid="uid://bvtf31jempjb5"]
+
+[ext_resource type="Script" uid="uid://cdv7prnbpp0g8" path="res://Scenes/Minigames/Platformer/Rooms/room_base.gd" id="1_u7e8a"]
+[ext_resource type="AudioStream" uid="uid://bf8xfocrerajo" path="res://Resources/Audio/platformer/sfx/exit_trigger.wav" id="2_enm6c"]
+[ext_resource type="Script" uid="uid://cclsbsfuuq28i" path="res://Scenes/Minigames/Platformer/Rooms/tile_map_variants.gd" id="2_uu4uf"]
+[ext_resource type="AudioStream" uid="uid://csppgxb0fpo8c" path="res://Resources/Audio/platformer/music/platformer_bgm.ogg" id="3_o7s1o"]
+[ext_resource type="TileSet" uid="uid://bwrict3878c5f" path="res://Resources/Tilesets/platformer_tileset.tres" id="3_pqq5c"]
+[ext_resource type="PackedScene" uid="uid://bqmljpasq8252" path="res://Components/SpawnPoint/SpawnPoint.tscn" id="4_6vl75"]
+[ext_resource type="PackedScene" uid="uid://dmrgx5iogndm3" path="res://Scenes/Minigames/Platformer/Enemies/Walker/WalkerSpike.tscn" id="5_6vl75"]
+[ext_resource type="PackedScene" uid="uid://48glgwvwxf0r" path="res://Components/CameraViewComponents/CameraView.tscn" id="5_7s646"]
+[ext_resource type="PackedScene" uid="uid://c31tp5r7bj5jr" path="res://Scenes/Minigames/Platformer/Enemies/Walker/Walker.tscn" id="6_7s646"]
+[ext_resource type="PackedScene" uid="uid://dtoy3w076j7ix" path="res://Scenes/Minigames/Platformer/Enemies/Charger/Charger.tscn" id="6_hx4b1"]
+[ext_resource type="PackedScene" uid="uid://es2r7a2bwp1g" path="res://Scenes/Minigames/Platformer/Enemies/Flyer/Flyer.tscn" id="7_vtmd8"]
+[ext_resource type="PackedScene" uid="uid://d3l3tvga3g2hj" path="res://Scenes/Minigames/Platformer/Collectibles/Coin.tscn" id="8_7s646"]
+[ext_resource type="PackedScene" uid="uid://binnbm1ko73f0" path="res://Scenes/Minigames/Platformer/Enemies/Fish/Fish.tscn" id="9_ve0u2"]
+[ext_resource type="PackedScene" uid="uid://dstkamcnbgx0f" path="res://Scenes/Minigames/Platformer/Collectibles/HeartPickUp.tscn" id="9_vtmd8"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dax5d"]
+size = Vector2(64, 64)
+
+[node name="Room3" type="Node2D" unique_id=1970645776]
+script = ExtResource("1_u7e8a")
+exit_sound = ExtResource("2_enm6c")
+background_music = ExtResource("3_o7s1o")
+
+[node name="TileMapVariants" type="Node2D" parent="." unique_id=325641098]
+script = ExtResource("2_uu4uf")
+
+[node name="TileMapLayer_A" type="TileMapLayer" parent="TileMapVariants" unique_id=520628162]
+tile_map_data = PackedByteArray("AAAAAA4AAQAMAAkAAAABAA4AAQALAAkAAAACAA4AAQALAAkAAAADAA4AAQALAAkAAAAEAA4AAQALAAkAAAAFAA4AAQALAAkAAAAGAA4AAQALAAkAAAAHAA4AAQALAAkAAAAIAA4AAQALAAkAAAAJAA4AAQALAAkAAAAKAA4AAQALAAkAAAALAA4AAQALAAkAAAAMAA4AAQALAAkAAAANAA4AAQALAAkAAAAOAA4AAQALAAkAAAAPAA4AAQALAAkAAAAQAA4AAQALAAkAAAARAA4AAQALAAkAAAASAA4AAQALAAkAAAATAA4AAQALAAkAAAAUAA4AAQALAAkAAAAVAA4AAQALAAkAAAAWAA4AAQANAAkAAAAaAA4AAQAMAAkAAAAbAA4AAQALAAkAAAAcAA4AAQALAAkAAAAdAA4AAQALAAkAAAAeAA4AAQALAAkAAAAfAA4AAQALAAkAAAAgAA4AAQALAAkAAAAhAA4AAQANAAkAAAAlAA4AAQAMAAkAAAAmAA4AAQALAAkAAAAnAA4AAQALAAkAAAApAA4AAQALAAkAAAAqAA4AAQALAAkAAAArAA4AAQALAAkAAAAsAA4AAQALAAkAAAAtAA4AAQALAAkAAAAuAA4AAQALAAkAAAAvAA4AAQALAAkAAAAxAA4AAQALAAkAAAAyAA4AAQALAAkAAAAzAA4AAQALAAkAAAA0AA4AAQALAAkAAAA1AA4AAQALAAkAAAA2AA4AAQALAAkAAAA3AA4AAQALAAkAAAA4AA4AAQALAAkAAAA5AA4AAQALAAkAAAA6AA4AAQALAAkAAAA7AA4AAQANAAkAAAARAAoAAQAQAAkAAAASAAoAAQARAAkAAAATAAoAAQARAAkAAAAUAAoAAQARAAkAAAAVAAoAAQARAAkAAAAWAAoAAQARAAkAAAAXAAoAAQARAAkAAAAYAAoAAQARAAkAAAAZAAoAAQARAAkAAAAaAAoAAQARAAkAAAAbAAoAAQARAAkAAAAcAAoAAQARAAkAAAAdAAoAAQARAAkAAAAeAAoAAQARAAkAAAAfAAoAAQARAAkAAAAaAAYAAQAQAAkAAAAbAAYAAQARAAkAAAAcAAYAAQARAAkAAAAdAAYAAQARAAkAAAAeAAYAAQARAAkAAAAfAAYAAQARAAkAAAAgAAYAAQARAAkAAAAhAAYAAQAAAAoAAAAgAAoAAQARAAkAAAAhAAoAAQARAAkAAAAiAAoAAQARAAkAAAAjAAoAAQARAAkAAAAkAAoAAQARAAkAAAAlAAoAAQARAAkAAAAnAAoAAQARAAkAAAAmAAoAAQARAAkAAAAoAAoAAQARAAkAAAApAAoAAQARAAkAAAAqAAoAAQARAAkAAAArAAoAAQANAAoAAAArAAsAAQAMAAoAAAArAAwAAQAMAAoAAAArAA0AAQAMAAoAAAAwAA4AAQALAAkAAAAyAAoAAQANAAoAAAAyAAsAAQAMAAoAAAAyAAwAAQAMAAoAAAAyAA0AAQAMAAoAAAAoAA4AAQALAAkAAAAIAAoAAQADAAoAAAAJAAoAAQAEAAoAAAAEAAcAAQADAAoAAAAFAAcAAQAEAAoAAAAAAAMAAQADAAoAAAABAAMAAQAEAAoAAAAAABAAAQAGAAkAAAAWABAAAQAHAAkAAAAhABAAAQAHAAkAAAA7ABAAAQAHAAkAAAAlABAAAQAGAAkAAAAbABAAAQAFAAkAAAAaABAAAQAGAAkAAAAKABAAAQAFAAkAAAALABAAAQAFAAkAAAAMABAAAQAFAAkAAAANABAAAQAFAAkAAAAOABAAAQAFAAkAAAAPABAAAQAFAAkAAAAQABAAAQAFAAkAAAARABAAAQAFAAkAAAASABAAAQAFAAkAAAATABAAAQAFAAkAAAAUABAAAQAFAAkAAAAVABAAAQAFAAkAAAAJABAAAQAFAAkAAAAIABAAAQAFAAkAAAABABAAAQAFAAkAAAACABAAAQAFAAkAAAADABAAAQAFAAkAAAAEABAAAQAFAAkAAAAFABAAAQAFAAkAAAAGABAAAQAFAAkAAAAHABAAAQAFAAkAAAAcABAAAQAFAAkAAAAdABAAAQAFAAkAAAAeABAAAQAFAAkAAAAfABAAAQAFAAkAAAAgABAAAQAFAAkAAAAmABAAAQAFAAkAAAAnABAAAQAFAAkAAAAoABAAAQAFAAkAAAApABAAAQAFAAkAAAAqABAAAQAFAAkAAAArABAAAQAFAAkAAAAsABAAAQAFAAkAAAAtABAAAQAFAAkAAAAuABAAAQAFAAkAAAAvABAAAQAFAAkAAAAwABAAAQAFAAkAAAAxABAAAQAFAAkAAAAyABAAAQAFAAkAAAAzABAAAQAFAAkAAAA0ABAAAQAFAAkAAAA1ABAAAQAFAAkAAAA2ABAAAQAFAAkAAAA3ABAAAQAFAAkAAAA4ABAAAQAFAAkAAAA5ABAAAQAFAAkAAAA6ABAAAQAFAAkAAAAlAA8AAQAJAAkAAAAmAA8AAQAIAAkAAAAnAA8AAQAIAAkAAAAoAA8AAQAIAAkAAAApAA8AAQAIAAkAAAAqAA8AAQAIAAkAAAArAA8AAQAIAAkAAAAsAA8AAQAIAAkAAAAtAA8AAQAIAAkAAAAuAA8AAQAIAAkAAAAvAA8AAQAIAAkAAAAwAA8AAQAIAAkAAAAxAA8AAQAIAAkAAAAyAA8AAQAIAAkAAAAzAA8AAQAIAAkAAAA0AA8AAQAIAAkAAAA1AA8AAQAIAAkAAAA2AA8AAQAIAAkAAAA3AA8AAQAIAAkAAAA4AA8AAQAIAAkAAAA5AA8AAQAIAAkAAAA6AA8AAQAIAAkAAAA7AA8AAQAKAAkAAAAaAA8AAQAJAAkAAAAbAA8AAQAIAAkAAAAcAA8AAQAIAAkAAAAdAA8AAQAIAAkAAAAeAA8AAQAIAAkAAAAfAA8AAQAIAAkAAAAgAA8AAQAIAAkAAAAhAA8AAQAKAAkAAAARAA8AAQAIAAkAAAASAA8AAQAIAAkAAAATAA8AAQAIAAkAAAAUAA8AAQAIAAkAAAAVAA8AAQAIAAkAAAAWAA8AAQAKAAkAAAAAAA8AAQAJAAkAAAABAA8AAQAIAAkAAAACAA8AAQAIAAkAAAADAA8AAQAIAAkAAAAEAA8AAQAIAAkAAAAFAA8AAQAIAAkAAAAGAA8AAQAIAAkAAAAHAA8AAQAIAAkAAAAIAA8AAQAIAAkAAAAJAA8AAQAIAAkAAAAKAA8AAQAIAAkAAAALAA8AAQAIAAkAAAAMAA8AAQAIAAkAAAANAA8AAQAIAAkAAAAOAA8AAQAIAAkAAAAPAA8AAQAIAAkAAAAQAA8AAQAIAAkAAAAXAA8AAQAEABEAAAAYAA8AAQAEABEAAAAZAA8AAQAEABEAAAAiAA8AAQAEABEAAAAjAA8AAQAEABEAAAAkAA8AAQAEABEAAAAXABAAAQADABEAAAAYABAAAQADABEAAAAZABAAAQADABEAAAAiABAAAQADABEAAAAjABAAAQADABEAAAAkABAAAQADABEAAAA6AA0AAQAOAAIAAAA=")
+tile_set = ExtResource("3_pqq5c")
+
+[node name="SpawnPoints" type="Node2D" parent="." unique_id=1067448747]
+
+[node name="SpawnPointWalker" parent="SpawnPoints" unique_id=2142692905 instance=ExtResource("4_6vl75")]
+position = Vector2(1920, 352)
+spawn_options = Array[PackedScene]([ExtResource("5_6vl75")])
+
+[node name="SpawnPointWalker2" parent="SpawnPoints" unique_id=1599168605 instance=ExtResource("4_6vl75")]
+position = Vector2(1920, 864)
+spawn_options = Array[PackedScene]([ExtResource("5_6vl75")])
+
+[node name="SpawnPointWalker3" parent="SpawnPoints" unique_id=1409264334 instance=ExtResource("4_6vl75")]
+position = Vector2(1472, 608)
+spawn_options = Array[PackedScene]([ExtResource("6_7s646")])
+spawn_chance = 0.8
+
+[node name="SpawnPointWalker4" parent="SpawnPoints" unique_id=7691763 instance=ExtResource("4_6vl75")]
+position = Vector2(2368, 608)
+spawn_options = Array[PackedScene]([ExtResource("6_7s646")])
+spawn_chance = 0.8
+
+[node name="SpawnPointFlyer" parent="SpawnPoints" unique_id=1598315313 instance=ExtResource("4_6vl75")]
+position = Vector2(864, 544)
+spawn_options = Array[PackedScene]([ExtResource("7_vtmd8")])
+
+[node name="SpawnPointFlyer2" parent="SpawnPoints" unique_id=2068868917 instance=ExtResource("4_6vl75")]
+position = Vector2(3488, 544)
+spawn_options = Array[PackedScene]([ExtResource("7_vtmd8")])
+
+[node name="SpawnPointCharger" parent="SpawnPoints" unique_id=623487743 instance=ExtResource("4_6vl75")]
+position = Vector2(3008, 864)
+spawn_options = Array[PackedScene]([ExtResource("6_hx4b1")])
+
+[node name="SpawnPointFish" parent="SpawnPoints" unique_id=965646296 instance=ExtResource("4_6vl75")]
+position = Vector2(2272, 992)
+spawn_options = Array[PackedScene]([ExtResource("9_ve0u2")])
+
+[node name="SpawnPointFish2" parent="SpawnPoints" unique_id=443246286 instance=ExtResource("4_6vl75")]
+position = Vector2(1568, 992)
+spawn_options = Array[PackedScene]([ExtResource("9_ve0u2")])
+
+[node name="SpawnPointCoin" parent="SpawnPoints" unique_id=336181986 instance=ExtResource("4_6vl75")]
+position = Vector2(320, 416)
+spawn_type = 1
+spawn_id = "coin_01"
+spawn_options = Array[PackedScene]([ExtResource("8_7s646")])
+
+[node name="SpawnPointCoin2" parent="SpawnPoints" unique_id=790147545 instance=ExtResource("4_6vl75")]
+position = Vector2(576, 608)
+spawn_type = 1
+spawn_id = "coin_01"
+spawn_options = Array[PackedScene]([ExtResource("8_7s646")])
+
+[node name="SpawnPointCoin3" parent="SpawnPoints" unique_id=1008885914 instance=ExtResource("4_6vl75")]
+position = Vector2(2080, 864)
+spawn_type = 1
+spawn_id = "coin_01"
+spawn_options = Array[PackedScene]([ExtResource("8_7s646")])
+
+[node name="SpawnPointCoin4" parent="SpawnPoints" unique_id=1331577429 instance=ExtResource("4_6vl75")]
+position = Vector2(1760, 864)
+spawn_type = 1
+spawn_id = "coin_01"
+spawn_options = Array[PackedScene]([ExtResource("8_7s646")])
+
+[node name="SpawnPointCoin5" parent="SpawnPoints" unique_id=1689293079 instance=ExtResource("4_6vl75")]
+position = Vector2(2688, 864)
+spawn_type = 1
+spawn_id = "coin_01"
+spawn_options = Array[PackedScene]([ExtResource("8_7s646")])
+
+[node name="SpawnPointCoin6" parent="SpawnPoints" unique_id=457480308 instance=ExtResource("4_6vl75")]
+position = Vector2(2624, 864)
+spawn_type = 1
+spawn_id = "coin_01"
+spawn_options = Array[PackedScene]([ExtResource("8_7s646")])
+
+[node name="SpawnPointCoin7" parent="SpawnPoints" unique_id=838889509 instance=ExtResource("4_6vl75")]
+position = Vector2(2560, 864)
+spawn_type = 1
+spawn_id = "coin_01"
+spawn_options = Array[PackedScene]([ExtResource("8_7s646")])
+
+[node name="SpawnPointCoin8" parent="SpawnPoints" unique_id=1180186935 instance=ExtResource("4_6vl75")]
+position = Vector2(2496, 864)
+spawn_type = 1
+spawn_id = "coin_01"
+spawn_options = Array[PackedScene]([ExtResource("8_7s646")])
+
+[node name="SpawnPointCoin9" parent="SpawnPoints" unique_id=1654780863 instance=ExtResource("4_6vl75")]
+position = Vector2(2432, 864)
+spawn_type = 1
+spawn_id = "coin_01"
+spawn_options = Array[PackedScene]([ExtResource("8_7s646")])
+
+[node name="SpawnPointCoin10" parent="SpawnPoints" unique_id=340709271 instance=ExtResource("4_6vl75")]
+position = Vector2(2880, 864)
+spawn_type = 1
+spawn_id = "coin_01"
+spawn_options = Array[PackedScene]([ExtResource("8_7s646")])
+
+[node name="SpawnPointCoin11" parent="SpawnPoints" unique_id=882499239 instance=ExtResource("4_6vl75")]
+position = Vector2(3136, 864)
+spawn_type = 1
+spawn_id = "coin_01"
+spawn_options = Array[PackedScene]([ExtResource("8_7s646")])
+
+[node name="SpawnPointHeart" parent="SpawnPoints" unique_id=668240485 instance=ExtResource("4_6vl75")]
+position = Vector2(64, 160)
+spawn_type = 1
+spawn_id = "heart_01"
+spawn_options = Array[PackedScene]([ExtResource("9_vtmd8")])
+
+[node name="Entities" type="Node2D" parent="." unique_id=237825660]
+
+[node name="EntryPoint" type="Marker2D" parent="." unique_id=1202710839]
+position = Vector2(256, 864)
+
+[node name="ExitPoint" type="Marker2D" parent="." unique_id=861263326]
+position = Vector2(3744, 864)
+
+[node name="ExitTrigger" type="Area2D" parent="." unique_id=722830349]
+position = Vector2(3744, 864)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ExitTrigger" unique_id=561410530]
+shape = SubResource("RectangleShape2D_dax5d")
+
+[node name="CameraView" parent="." unique_id=2107053954 instance=ExtResource("5_7s646")]
+position = Vector2(0, 9)
+size = Vector2(3840, 1080)

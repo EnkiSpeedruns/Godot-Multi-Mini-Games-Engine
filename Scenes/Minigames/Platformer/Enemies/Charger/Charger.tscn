@@ -3,7 +3,9 @@
 [ext_resource type="Texture2D" uid="uid://clqa8btouw3d8" path="res://Scenes/Minigames/Platformer/Resources/Sprites/spritesheet-enemies-default.png" id="1_2t4i5"]
 [ext_resource type="Script" uid="uid://ce3qfk2sknqbx" path="res://Scenes/Minigames/Platformer/Enemies/Charger/charger.gd" id="1_v4r4n"]
 [ext_resource type="PackedScene" uid="uid://cdxtjgcdkdq2v" path="res://Components/HealthComponent/HealthComponent.tscn" id="2_4mfpp"]
+[ext_resource type="AudioStream" uid="uid://crgcb5c2ucv7c" path="res://Resources/Audio/platformer/sfx/enemy_die.wav" id="2_068o5"]
 [ext_resource type="PackedScene" uid="uid://uj7rukar7v3r" path="res://Components/HurtboxComponent/HurtboxComponent.tscn" id="3_oeldi"]
+[ext_resource type="AudioStream" uid="uid://g0eh2wqgnalk" path="res://Resources/Audio/platformer/sfx/charger_wall_hit.wav" id="3_u44au"]
 [ext_resource type="PackedScene" uid="uid://ctyxbyrktye4n" path="res://Components/HitBoxComponent/HitboxComponent.tscn" id="4_rr4ql"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_oeldi"]
@@ -51,6 +53,8 @@ size = Vector2(44, 60)
 
 [node name="Charger" type="CharacterBody2D" unique_id=1103128496]
 script = ExtResource("1_v4r4n")
+death_sound = ExtResource("2_068o5")
+wall_hit_sound = ExtResource("3_u44au")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=384777149]
 sprite_frames = SubResource("SpriteFrames_v4r4n")

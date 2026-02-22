@@ -41,35 +41,25 @@ func _process(delta: float) -> void:
 func _update_look_ahead(delta: float) -> void:
 	if not look_ahead_enabled:
 		return
-	
-	# Determinar direcciÃ³n del player
-	var player_direction = 0.0
+
+	var player_direction := 0.0
 	if abs(player.velocity.x) > 10.0:
 		player_direction = sign(player.velocity.x)
-	
-	# Calcular target de look ahead
+
 	target_look_ahead = player_direction * look_ahead_distance
-	
-	# Interpolar suavemente
 	look_ahead_offset = lerp(look_ahead_offset, target_look_ahead, look_ahead_speed * delta)
-	
-	# Aplicar offset PERO respetando lÃ­mites
-	var camera_pos_x = get_screen_center_position().x
-	var viewport_half_width = get_viewport_rect().size.x / (2.0 * zoom.x)
-	
-	# Calcular posiciÃ³n final de la cÃ¡mara con el offset
-	var final_camera_left = camera_pos_x + look_ahead_offset - viewport_half_width
-	var final_camera_right = camera_pos_x + look_ahead_offset + viewport_half_width
-	
-	# Clampear el offset para que no rompa los lÃ­mites
-	var clamped_offset = look_ahead_offset
-	
-	if limit_left != -10000000:  # Si hay lÃ­mite izquierdo
-		if final_camera_left < limit_left:
-			clamped_offset = look_ahead_offset + (limit_left - final_camera_left)
-	
-	if limit_right != 10000000:  # Si hay lÃ­mite derecho
-		if final_camera_right > limit_right:
-			clamped_offset = look_ahead_offset - (final_camera_right - limit_right)
-	
-	offset.x = clamped_offset
+
+	# Clampear usando posición del player vs límites (no get_screen_center_position)
+	var viewport_half_width := get_viewport_rect().size.x / (2.0 * zoom.x)
+	var player_x := player.global_position.x
+
+	var max_offset_right := look_ahead_distance
+	var max_offset_left := look_ahead_distance
+
+	if limit_right != 10000000:
+		max_offset_right = max(0.0, limit_right - player_x - viewport_half_width)
+
+	if limit_left != -10000000:
+		max_offset_left = max(0.0, player_x - limit_left - viewport_half_width)
+
+	offset.x = clamp(look_ahead_offset, -max_offset_left, max_offset_right)

@@ -70,6 +70,8 @@ func _create_music_player() -> void:
 	music_player = AudioStreamPlayer.new()
 	music_player.name = "MusicPlayer"
 	music_player.bus = BUS_MUSIC
+	# ALWAYS para que la música no se corte cuando el juego se pausa
+	music_player.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(music_player)
 	
 	# Conectar señal de finished
@@ -81,6 +83,9 @@ func _create_sfx_pool() -> void:
 		var player = AudioStreamPlayer.new()
 		player.name = "SFXPlayer_%d" % i
 		player.bus = BUS_SFX
+		# ALWAYS para que los SFX suenen aunque el juego esté pausado
+		# (ej: sonido de exit trigger que se dispara justo antes de pausar)
+		player.process_mode = Node.PROCESS_MODE_ALWAYS
 		add_child(player)
 		sfx_players.append(player)
 
@@ -116,21 +121,15 @@ func play_music(music: AudioStream, fade_in: float = 0.0, loop: bool = true) -> 
 	# Configurar nueva música
 	music_player.stream = music
 	
-	# Configurar loop según el tipo de stream
+	# Configurar loop si el stream lo soporta
 	if music_player.stream is AudioStreamOggVorbis:
 		music_player.stream.loop = loop
 	elif music_player.stream is AudioStreamMP3:
 		music_player.stream.loop = loop
-	elif music_player.stream is AudioStreamWAV:
-		# Para WAV, configurar loop mode
-		if loop:
-			music_player.stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
-		else:
-			music_player.stream.loop_mode = AudioStreamWAV.LOOP_DISABLED
 	
 	# Fade in si se solicita
 	if fade_in > 0.0:
-		music_player.volume_db = -80.0  # Silencio inicial para fade in (FIX: evita NaN)
+		music_player.volume_db = -80.0
 		music_player.play()
 		_fade_music_to(1.0, fade_in)
 	else:
@@ -139,7 +138,7 @@ func play_music(music: AudioStream, fade_in: float = 0.0, loop: bool = true) -> 
 	
 	current_music_track = music.resource_path if music.resource_path else "Unknown"
 	music_started.emit(current_music_track)
-	print("Playing music: %s (loop: %s)" % [current_music_track, loop])
+	print("Playing music: %s" % current_music_track)
 
 ## Detiene la música actual
 ##
@@ -194,7 +193,8 @@ func _fade_music_to(target_volume: float, duration: float) -> void:
 	
 	music_tween = create_tween()
 	
-	var target_db = linear_to_db(target_volume) if target_volume > 0 else -80.0
+	# Usar -80.0 como silencio efectivo en lugar de calcular log(0)
+	var target_db = linear_to_db(target_volume) if target_volume > 0.0 else -80.0
 	
 	music_tween.tween_property(
 		music_player,
@@ -236,7 +236,6 @@ func get_current_music_track() -> String:
 ## @param sound: AudioStream del SFX
 ## @param volume_db: Volumen en dB (0 = normal, negativo = más bajo)
 ## @param pitch_scale: Escala de pitch (1.0 = normal)
-## @param position_2d: Posición 2D opcional para audio espacial (no implementado aún)
 func play_sfx(
 	sound: AudioStream,
 	volume_db: float = 0.0,
@@ -327,9 +326,8 @@ func _set_bus_volume(bus_index: int, volume: float) -> void:
 	if bus_index == -1:
 		return
 	
-	# Convertir volumen lineal (0-1) a dB
-	# -80 dB = silencio efectivo
-	var volume_db = linear_to_db(volume) if volume > 0 else -80.0
+	# Usar -80.0 como silencio efectivo en lugar de calcular log(0)
+	var volume_db = linear_to_db(volume) if volume > 0.0 else -80.0
 	AudioServer.set_bus_volume_db(bus_index, volume_db)
 
 ## Obtiene el volumen del bus Master
@@ -368,13 +366,7 @@ func is_bus_muted(bus_name: String) -> bool:
 ## Reproduce un sonido de UI (botón, hover, etc.)
 ## Usa volumen más bajo por defecto
 func play_ui_sound(sound: AudioStream) -> void:
-	play_sfx(sound, -5.0)  # -5 dB más bajo que normal
-
-## Convierte volumen lineal (0-1) a decibeles
-func linear_to_db(linear: float) -> float:
-	if linear <= 0:
-		return -80.0
-	return 20.0 * log(linear) / log(10.0)
+	play_sfx(sound, -5.0)
 
 ## Convierte decibeles a volumen lineal (0-1)
 func db_to_linear(db: float) -> float:

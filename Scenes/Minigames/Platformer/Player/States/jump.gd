@@ -11,6 +11,9 @@ func enter() -> void:
 	
 	if player.sprite:
 		player.sprite.play("jump")
+	
+	if player.jump_sound:
+		AudioManager.play_sfx(player.jump_sound)
 
 func exit() -> void:
 	print("[Jump] Exit")

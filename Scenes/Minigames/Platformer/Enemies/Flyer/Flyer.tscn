@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://es2r7a2bwp1g"]
 
 [ext_resource type="Script" uid="uid://cqi87618b14bd" path="res://Scenes/Minigames/Platformer/Enemies/Flyer/flyer.gd" id="1_tsvme"]
+[ext_resource type="AudioStream" uid="uid://crgcb5c2ucv7c" path="res://Resources/Audio/platformer/sfx/enemy_die.wav" id="2_a2i7w"]
 [ext_resource type="Texture2D" uid="uid://clqa8btouw3d8" path="res://Scenes/Minigames/Platformer/Resources/Sprites/spritesheet-enemies-default.png" id="2_u7r0k"]
 [ext_resource type="PackedScene" uid="uid://cdxtjgcdkdq2v" path="res://Components/HealthComponent/HealthComponent.tscn" id="3_a2i7w"]
 [ext_resource type="PackedScene" uid="uid://uj7rukar7v3r" path="res://Components/HurtboxComponent/HurtboxComponent.tscn" id="4_wv2ui"]
@@ -39,6 +40,7 @@ size = Vector2(57, 29)
 
 [node name="Flyer" type="CharacterBody2D" unique_id=284525274]
 script = ExtResource("1_tsvme")
+death_sound = ExtResource("2_a2i7w")
 move_speed = 150.0
 patrol_distance = 400.0
 wave_frequency = 4.0

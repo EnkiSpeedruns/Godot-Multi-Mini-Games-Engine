@@ -3,8 +3,16 @@ extends CharacterBody2D
 
 ## Player - Controlador principal del jugador del platformer
 
+@export var stomp_sound: AudioStream
+@export var death_sound: AudioStream
+@export var hurt_sound: AudioStream
+@export var jump_sound: AudioStream
+@export var footstep_sound: AudioStream
+# Frames de la animación "walk" en los que suena el paso (pie toca el suelo)
+@export var footstep_frames: Array[int] = [1]
+
 # ============================================================================
-# CONFIGURACIÓN DE MOVIMIENTO
+# CONFIGURACIÃ“N DE MOVIMIENTO
 # ============================================================================
 @export_group("Movement")
 @export var max_speed: float = 200.0
@@ -29,6 +37,7 @@ extends CharacterBody2D
 @onready var state_machine: StateMachine = $StateMachine
 @onready var hurtbox: HurtboxComponent = $HurtboxComponent
 @onready var stomp_hitbox: HitboxComponent = $StompHitbox
+@onready var screen_notifier: VisibleOnScreenNotifier2D = $VisibleOnScreenNotifier2D
 
 # Referencias visuales
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
@@ -49,14 +58,15 @@ func _ready() -> void:
 	if stomp_hitbox:
 		stomp_hitbox.hit_landed.connect(_on_stomp_landed)
 	
-	# Asegurar que empiece con idle
+	# Conectar frame_changed para sincronizar pasos con la animación
 	if sprite:
 		sprite.play("idle")
+		sprite.frame_changed.connect(_on_sprite_frame_changed)
 	
 	print("[Player] Ready!")
 	
 func _physics_process(delta: float) -> void:
-# Acivar/desactivar stomp hitbox según si está cayendo
+# Acivar/desactivar stomp hitbox segÃºn si estÃ¡ cayendo
 	if stomp_hitbox:
 		if velocity.y > 0:  # Cayendo
 			stomp_hitbox.activate()
@@ -100,16 +110,23 @@ func cut_jump() -> void:
 # CALLBACKS
 # ============================================================================
 
+## Suena el paso solo en los frames configurados de la animación "walk"
+func _on_sprite_frame_changed() -> void:
+	if footstep_sound and sprite.animation == "walk" and sprite.frame in footstep_frames:
+		AudioManager.play_sfx(footstep_sound)
+
 func _on_health_changed(new_health: int, max_health: int) -> void:
 	print("[Player] Health: %d/%d" % [new_health, max_health])
 
 func _on_died() -> void:
-	print("[Player] DIED!")
+	if death_sound:
+		AudioManager.play_sfx(death_sound)
 	set_physics_process(false)
-	# Aquí game over
+	# AquÃ­ game over
 
 func _on_hit_received(hit_data: Dictionary) -> void:
-	print("[Player] Got hit! Damage: %d" % hit_data.damage)
+	if hurt_sound:
+		AudioManager.play_sfx(hurt_sound)
 	
 	# Solo transicionar al estado Hit
 	# El estado se encarga del knockback
@@ -117,7 +134,8 @@ func _on_hit_received(hit_data: Dictionary) -> void:
 		state_machine.transition_to("hit")
 
 func _on_stomp_landed(hurtbox: HurtboxComponent) -> void:
-	print("[Player] Stomped enemy!")
+	if stomp_sound:
+		AudioManager.play_sfx(stomp_sound)
 	# Bounce al player
 	velocity.y = jump_velocity * 0.6  # Bounce menor que salto normal
 
@@ -133,3 +151,8 @@ func get_current_state() -> String:
 	if state_machine:
 		return state_machine.get_current_state_name()
 	return "Unknown"
+
+func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
+	# Solo morir si cayó (velocity.y positiva = cayendo)
+	if velocity.y > 0 and health_component and health_component.is_alive():
+		health_component.kill()

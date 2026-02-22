@@ -40,6 +40,7 @@ func start_game() -> void:
 		hud.update_score(current_score)
 
 func _on_room_spawned(room: PlatformerRoom) -> void:
+	print("[GameLogic] _on_room_spawned llamado")
 	if camera_confiner:
 		camera_confiner.apply_room(room)
 
@@ -67,10 +68,12 @@ func end_game(score: int) -> void:
 	GameManager.save_high_score("platformer", score)
 
 func return_to_menu() -> void:
+	AudioManager.stop_music(0.5)
 	SceneTransition.change_scene("res://Scenes/MainMenu/MainMenu.tscn", "fade")
 
 func _on_player_died() -> void:
 	end_game(current_score)
+	return_to_menu()
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):

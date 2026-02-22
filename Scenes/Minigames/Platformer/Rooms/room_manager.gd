@@ -1,7 +1,7 @@
 class_name RoomManager
 extends Node
 
-## RoomManager - Sistema ULTRA SIMPLE: 1 room a la vez
+## RoomManager - activar process mode always en el nodo padre
 
 signal room_spawned(room: PlatformerRoom)
 signal room_completed(room_id: String, rooms_cleared: int)
@@ -31,6 +31,9 @@ var current_difficulty: String = "Easy"
 @export var medium_enemy_damage: int = 2
 @export var hard_enemy_damage: int = 3
 
+@export_group("Audio")
+@export var background_music: AudioStream
+
 # Referencias
 var level_container: Node2D
 var player: Player
@@ -40,10 +43,14 @@ func _ready() -> void:
 
 func _load_room_scenes() -> void:
 	"""AGREGAR TUS ROOMS AQUÍ"""
-	# Ejemplo:
-	easy_rooms = [preload("res://Scenes/Minigames/Platformer/Rooms/Room1.tscn")]
-	medium_rooms = easy_rooms
-	hard_rooms = easy_rooms
+	easy_rooms = [preload("res://Scenes/Minigames/Platformer/Rooms/Room1.tscn"), 
+	preload("res://Scenes/Minigames/Platformer/Rooms/Room2.tscn")]
+	medium_rooms = [preload("res://Scenes/Minigames/Platformer/Rooms/Room1.tscn"), 
+	preload("res://Scenes/Minigames/Platformer/Rooms/Room2.tscn"), 
+	preload("res://Scenes/Minigames/Platformer/Rooms/Room3.tscn")]
+	hard_rooms = [preload("res://Scenes/Minigames/Platformer/Rooms/Room1.tscn"), 
+	preload("res://Scenes/Minigames/Platformer/Rooms/Room2.tscn"), 
+	preload("res://Scenes/Minigames/Platformer/Rooms/Room3.tscn")]
 
 
 func initialize(container: Node2D, game_player: Player) -> void:
@@ -52,6 +59,10 @@ func initialize(container: Node2D, game_player: Player) -> void:
 	rooms_cleared = 0
 	current_difficulty = "Easy"
 	
+	# Iniciar música una sola vez al comenzar el juego
+	if background_music:
+		AudioManager.play_music(background_music, 1.0)
+	
 	_spawn_room(0, "Easy")
 
 func _spawn_room(room_number: int, difficulty: String) -> void:
@@ -59,7 +70,7 @@ func _spawn_room(room_number: int, difficulty: String) -> void:
 	Spawnea UN room y SOLO un room.
 	Destruye el anterior completamente.
 	"""
-	print("\n[RoomManager] ═══════════════════════════════════")
+	print("\n[RoomManager] ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●")
 	print("[RoomManager] SPAWNING NEW ROOM")
 	print("  Room number: %d" % room_number)
 	print("  Difficulty: %s" % difficulty)
@@ -102,23 +113,37 @@ func _spawn_room(room_number: int, difficulty: String) -> void:
 	room_spawned.emit(current_room)
 	
 	print("[RoomManager] Room ready!")
-	print("[RoomManager] ═══════════════════════════════════\n")
+	print("[RoomManager] ●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●●\n")
 
 func _on_room_completed() -> void:
-	"""Callback cuando se completa un room"""
+	print("[RoomManager] _on_room_completed - pausando y lanzando fade")
 	rooms_cleared += 1
-	
-	print("\n[RoomManager] ═══ ROOM COMPLETED ═══")
-	print("  Rooms cleared: %d" % rooms_cleared)
-	
 	room_completed.emit(current_room.room_id, rooms_cleared)
-	
-	# Actualizar dificultad
 	_update_difficulty()
 	
-	# Spawn siguiente room
+	_set_player_collisions(false)
+	get_tree().paused = true
+	SceneTransition.transition_midpoint.connect(_on_transition_midpoint, CONNECT_ONE_SHOT)
+	SceneTransition.transition_finished.connect(_on_transition_finished, CONNECT_ONE_SHOT)
+	SceneTransition.fade_only()
+
+func _on_transition_midpoint() -> void:
+	print("[RoomManager] _on_transition_midpoint - spawneando room")
 	var next_difficulty = _calculate_difficulty_for_rooms(rooms_cleared + 1)
-	_spawn_room(rooms_cleared + 1, next_difficulty)
+	_spawn_room(rooms_cleared, next_difficulty)
+
+func _on_transition_finished() -> void:
+	print("[RoomManager] _on_transition_finished - despausing")
+	get_tree().paused = false
+	# Esperar un frame para que el motor limpie los overlaps antes de rehabilitar
+	await get_tree().process_frame
+	_set_player_collisions(true)
+
+func _set_player_collisions(enabled: bool) -> void:
+	if not player:
+		return
+	player.set_collision_layer_value(1, enabled)
+	player.set_collision_mask_value(1, enabled)
 
 func _instantiate_room(difficulty: String, room_number: int) -> PlatformerRoom:
 	"""Instancia un room de la dificultad especificada"""

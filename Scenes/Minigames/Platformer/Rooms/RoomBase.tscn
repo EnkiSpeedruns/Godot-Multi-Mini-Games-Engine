@@ -1,6 +1,43 @@
 [gd_scene format=3 uid="uid://d3m82nbmxakhb"]
 
 [ext_resource type="Script" uid="uid://cdv7prnbpp0g8" path="res://Scenes/Minigames/Platformer/Rooms/room_base.gd" id="1_o2kyp"]
+[ext_resource type="Script" uid="uid://cclsbsfuuq28i" path="res://Scenes/Minigames/Platformer/Rooms/tile_map_variants.gd" id="2_1n436"]
+[ext_resource type="AudioStream" uid="uid://bf8xfocrerajo" path="res://Resources/Audio/platformer/sfx/exit_trigger.wav" id="2_662hj"]
+[ext_resource type="TileSet" uid="uid://bwrict3878c5f" path="res://Resources/Tilesets/platformer_tileset.tres" id="3_wh6qx"]
+[ext_resource type="PackedScene" uid="uid://bqmljpasq8252" path="res://Components/SpawnPoint/SpawnPoint.tscn" id="4_1uijc"]
+[ext_resource type="PackedScene" uid="uid://48glgwvwxf0r" path="res://Components/CameraViewComponents/CameraView.tscn" id="8_yucwl"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dax5d"]
+size = Vector2(64, 64)
 
 [node name="RoomBase" type="Node2D" unique_id=1970645776]
 script = ExtResource("1_o2kyp")
+exit_sound = ExtResource("2_662hj")
+
+[node name="TileMapVariants" type="Node2D" parent="." unique_id=325641098]
+script = ExtResource("2_1n436")
+
+[node name="TileMapLayer_A" type="TileMapLayer" parent="TileMapVariants" unique_id=520628162]
+tile_map_data = PackedByteArray(0, 0, 27, 0, 1, 0, 1, 0, 14, 0, 2, 0, 0, 0)
+tile_set = ExtResource("3_wh6qx")
+
+[node name="SpawnPoints" type="Node2D" parent="." unique_id=1067448747]
+
+[node name="SpawnPoint" parent="SpawnPoints" unique_id=2142692905 instance=ExtResource("4_1uijc")]
+
+[node name="Entities" type="Node2D" parent="." unique_id=237825660]
+
+[node name="EntryPoint" type="Marker2D" parent="." unique_id=1202710839]
+position = Vector2(256, 864)
+
+[node name="ExitPoint" type="Marker2D" parent="." unique_id=861263326]
+position = Vector2(1760, 96)
+
+[node name="ExitTrigger" type="Area2D" parent="." unique_id=722830349]
+position = Vector2(1760, 96)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ExitTrigger" unique_id=561410530]
+shape = SubResource("RectangleShape2D_dax5d")
+
+[node name="CameraView" parent="." unique_id=2107053954 instance=ExtResource("8_yucwl")]
+position = Vector2(0, 9)

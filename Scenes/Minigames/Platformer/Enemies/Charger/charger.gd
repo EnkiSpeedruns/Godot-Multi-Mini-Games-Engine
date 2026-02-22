@@ -3,6 +3,9 @@ extends CharacterBody2D
 
 ## Charger - Enemigo que embiste agresivamente hacia los lados
 
+@export var death_sound: AudioStream
+@export var wall_hit_sound: AudioStream
+
 @export_group("Movement")
 @export var charge_speed: float = 300.0
 @export var idle_duration: float = 1.0
@@ -24,8 +27,8 @@ extends CharacterBody2D
 @onready var hurtbox: HurtboxComponent = $HurtboxComponent
 @onready var attack_hitbox: HitboxComponent = $AttackHitbox
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
-@onready var wall_ray_right: RayCast2D = $WallRayRight
-@onready var wall_ray_left: RayCast2D = $WallRayLeft
+@onready var wall_ray_right: RayCast2D = $WallRay
+@onready var wall_ray_left: RayCast2D = $WallRay2
 
 enum State { IDLE, CHARGING, CRASHED }
 
@@ -112,6 +115,9 @@ func _hit_wall() -> void:
 	print("[Charger] HIT WALL!")
 	current_state = State.CRASHED
 
+	if wall_hit_sound:
+		AudioManager.play_sfx(wall_hit_sound)
+
 	if sprite:
 		sprite.play("crash")
 
@@ -154,7 +160,10 @@ func _on_hit_received(hit_data: Dictionary) -> void:
 func _on_died() -> void:
 	if is_dead:
 		return
-
+		
+	if death_sound:
+		AudioManager.play_sfx(death_sound)
+	
 	is_dead = true
 	set_physics_process(false)
 

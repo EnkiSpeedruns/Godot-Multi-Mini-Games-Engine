@@ -3,6 +3,8 @@ extends CharacterBody2D
 
 ## Flyer - Enemigo volador que patrulla con movimiento ondulante
 
+@export var death_sound: AudioStream
+
 @export_group("Movement")
 @export var move_speed: float = 60.0
 @export var patrol_distance: float = 200.0
@@ -86,7 +88,8 @@ func _on_hit_received(hit_data: Dictionary) -> void:
 func _on_died() -> void:
 	if is_dead:
 		return
-
+	if death_sound:
+		AudioManager.play_sfx(death_sound)
 	is_dead = true
 	set_physics_process(false)
 

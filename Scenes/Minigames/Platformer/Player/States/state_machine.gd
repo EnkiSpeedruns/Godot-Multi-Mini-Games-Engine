@@ -1,11 +1,11 @@
 class_name StateMachine
 extends Node
 
-## StateMachine - MÃ¡quina de estados genÃ©rica
+## StateMachine - MÃƒÂ¡quina de estados genÃƒÂ©rica
 ##
 ## Gestiona transiciones entre estados y propaga updates/inputs
 
-# SeÃ±ales
+# SeÃƒÂ±ales
 signal state_changed(old_state: String, new_state: String)
 
 # Estado actual
@@ -36,7 +36,7 @@ func _ready() -> void:
 	print("[StateMachine] Registered %d states" % states.size())
 
 func start(initial_state_name: String) -> void:
-	var initial_state = states.get(initial_state_name.to_lower())  # Normalizar a minÃºsculas
+	var initial_state = states.get(initial_state_name.to_lower())  # Normalizar a minÃƒÂºsculas
 	
 	if not initial_state:
 		push_error("[StateMachine] State '%s' not found!" % initial_state_name)

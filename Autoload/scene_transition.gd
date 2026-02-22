@@ -2,23 +2,26 @@ extends CanvasLayer
 
 ## SceneTransition - Sistema global de transiciones entre escenas
 ##
-## Maneja transiciones visuales y carga asíncrona de escenas.
+## Maneja transiciones visuales y carga asÃ­ncrona de escenas.
 ## Uso: SceneTransition.change_scene(scene_path, "fade")
 
-# Señales
+# SeÃ±ales
 signal transition_started(transition_type: String)
 signal transition_midpoint()  # Momento en que cambia la escena
 signal transition_finished()
 
-# Tipos de transición disponibles
+# Tipos de transiciÃ³n disponibles
 enum TransitionType {
 	INSTANT,
 	FADE,
 	WIPE_LEFT,
-	WIPE_RIGHT
+	WIPE_RIGHT,
+	PIXELATE,
+	CIRCLE_CLOSE,
+	CIRCLE_OPEN
 }
 
-# Configuración
+# ConfiguraciÃ³n
 @export var default_transition: TransitionType = TransitionType.FADE
 @export var transition_duration: float = 0.5
 @export var use_async_loading: bool = true
@@ -34,8 +37,10 @@ var _transition_type: TransitionType = TransitionType.FADE
 @onready var loading_label: Label = $LoadingLabel
 
 func _ready() -> void:
-	# Asegurarse de que este CanvasLayer está por encima de todo
+	# Asegurarse de que este CanvasLayer estÃ¡ por encima de todo
 	layer = 100
+	
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	
 	# Inicialmente invisible
 	color_rect.visible = false
@@ -46,13 +51,13 @@ func _ready() -> void:
 	
 	print("SceneTransition initialized")
 
-## Cambia a una nueva escena con transición
+## Cambia a una nueva escena con transiciÃ³n
 ##
 ## @param scene_path: Ruta a la escena a cargar
-## @param transition_type_name: Nombre del tipo de transición ("fade", "wipe_left", "wipe_right", "instant")
+## @param transition_type_name: Nombre del tipo de transiciÃ³n ("fade", "wipe", etc.)
 ## @param show_loading: Si mostrar el texto "Loading..."
 func change_scene(
-	scene_path: String,
+	scene_path: String, 
 	transition_type_name: String = "fade",
 	show_loading: bool = false
 ) -> void:
@@ -68,10 +73,10 @@ func change_scene(
 	
 	transition_started.emit(transition_type_name)
 	
-	# Ejecutar transición de salida
+	# Ejecutar transiciÃ³n de salida
 	_play_transition_out()
 
-## Recarga la escena actual con transición
+## Recarga la escena actual con transiciÃ³n
 func reload_current_scene(transition_type_name: String = "fade") -> void:
 	var current_scene = get_tree().current_scene
 	if current_scene:
@@ -88,11 +93,17 @@ func _parse_transition_type(type_name: String) -> TransitionType:
 			return TransitionType.WIPE_LEFT
 		"wipe_right", "wipe-right":
 			return TransitionType.WIPE_RIGHT
+		"pixelate":
+			return TransitionType.PIXELATE
+		"circle_close", "circle-close":
+			return TransitionType.CIRCLE_CLOSE
+		"circle_open", "circle-open":
+			return TransitionType.CIRCLE_OPEN
 		_:
-			push_warning("Unknown transition type '%s', using fade" % type_name)
-			return TransitionType.FADE
+			push_warning("Unknown transition type '%s', using default" % type_name)
+			return default_transition
 
-## Reproduce la animación de salida (oscurecer pantalla)
+## Reproduce la animaciÃ³n de salida (oscurecer pantalla)
 func _play_transition_out() -> void:
 	color_rect.visible = true
 	
@@ -105,10 +116,16 @@ func _play_transition_out() -> void:
 			animation_player.play("wipe_left_out")
 		TransitionType.WIPE_RIGHT:
 			animation_player.play("wipe_right_out")
+		TransitionType.PIXELATE:
+			animation_player.play("pixelate_out")
+		TransitionType.CIRCLE_CLOSE:
+			animation_player.play("circle_close")
+		TransitionType.CIRCLE_OPEN:
+			animation_player.play("circle_close")  # Primero cerrar
 		_:
 			animation_player.play("fade_out")
 
-## Reproduce la animación de entrada (aclarar pantalla)
+## Reproduce la animaciÃ³n de entrada (aclarar pantalla)
 func _play_transition_in() -> void:
 	match _transition_type:
 		TransitionType.INSTANT:
@@ -119,14 +136,22 @@ func _play_transition_in() -> void:
 			animation_player.play("wipe_left_in")
 		TransitionType.WIPE_RIGHT:
 			animation_player.play("wipe_right_in")
+		TransitionType.PIXELATE:
+			animation_player.play("pixelate_in")
+		TransitionType.CIRCLE_CLOSE:
+			animation_player.play("circle_open")  # Luego abrir
+		TransitionType.CIRCLE_OPEN:
+			animation_player.play("circle_open")
 		_:
 			animation_player.play("fade_in")
 
-## Callback cuando termina la animación de salida
+## Callback cuando termina la animaciÃ³n de salida
 func _on_transition_out_complete() -> void:
 	transition_midpoint.emit()
 	
 	if _target_scene_path.is_empty():
+		# Solo fade, no hay escena que cambiar
+		_play_transition_in()
 		return
 	
 	if use_async_loading:
@@ -134,7 +159,7 @@ func _on_transition_out_complete() -> void:
 	else:
 		_load_scene_sync()
 
-## Carga síncrona de escena (simple pero puede causar lag)
+## Carga sÃ­ncrona de escena (simple pero puede causar lag)
 func _load_scene_sync() -> void:
 	var err = get_tree().change_scene_to_file(_target_scene_path)
 	
@@ -145,12 +170,12 @@ func _load_scene_sync() -> void:
 		loading_label.visible = false
 		return
 	
-	# Pequeña pausa para que la nueva escena se inicialice
+	# PequeÃ±a pausa para que la nueva escena se inicialice
 	await get_tree().process_frame
 	
 	_play_transition_in()
 
-## Carga asíncrona de escena (recomendado para escenas grandes)
+## Carga asÃ­ncrona de escena (recomendado para escenas grandes)
 func _load_scene_async() -> void:
 	var loader = ResourceLoader.load_threaded_request(_target_scene_path)
 	
@@ -158,10 +183,10 @@ func _load_scene_async() -> void:
 		_poll_async_loading()
 	else:
 		push_error("Failed to start async loading: %s" % _target_scene_path)
-		# Fallback a carga síncrona
+		# Fallback a carga sÃ­ncrona
 		_load_scene_sync()
 
-## Polling del estado de carga asíncrona
+## Polling del estado de carga asÃ­ncrona
 func _poll_async_loading() -> void:
 	var progress = []
 	
@@ -202,7 +227,7 @@ func _poll_async_loading() -> void:
 				loading_label.visible = false
 				return
 
-## Callback cuando termina la animación de entrada
+## Callback cuando termina la animaciÃ³n de entrada
 func _on_transition_in_complete() -> void:
 	color_rect.visible = false
 	loading_label.visible = false
@@ -215,37 +240,62 @@ func _create_animations() -> void:
 	
 	# Fade Out
 	var fade_out = _create_fade_animation(0.0, 1.0)
+	fade_out.set_length(transition_duration)
 	anim_lib.add_animation("fade_out", fade_out)
 	
 	# Fade In
 	var fade_in = _create_fade_animation(1.0, 0.0)
+	fade_in.set_length(transition_duration)
 	anim_lib.add_animation("fade_in", fade_in)
 	
 	# Wipe Left Out
-	var wipe_left_out = _create_wipe_animation(true, true)  # izquierda, salida
+	var wipe_left_out = _create_wipe_animation(Vector2(-1, 0), Vector2(0, 0))
+	wipe_left_out.set_length(transition_duration)
 	anim_lib.add_animation("wipe_left_out", wipe_left_out)
 	
 	# Wipe Left In
-	var wipe_left_in = _create_wipe_animation(true, false)  # izquierda, entrada
+	var wipe_left_in = _create_wipe_animation(Vector2(0, 0), Vector2(1, 0))
+	wipe_left_in.set_length(transition_duration)
 	anim_lib.add_animation("wipe_left_in", wipe_left_in)
 	
 	# Wipe Right Out
-	var wipe_right_out = _create_wipe_animation(false, true)  # derecha, salida
+	var wipe_right_out = _create_wipe_animation(Vector2(1, 0), Vector2(0, 0))
+	wipe_right_out.set_length(transition_duration)
 	anim_lib.add_animation("wipe_right_out", wipe_right_out)
 	
 	# Wipe Right In
-	var wipe_right_in = _create_wipe_animation(false, false)  # derecha, entrada
+	var wipe_right_in = _create_wipe_animation(Vector2(0, 0), Vector2(-1, 0))
+	wipe_right_in.set_length(transition_duration)
 	anim_lib.add_animation("wipe_right_in", wipe_right_in)
+	
+	# Pixelate Out (simulado con alpha)
+	var pixelate_out = _create_fade_animation(0.0, 1.0)
+	pixelate_out.set_length(transition_duration * 0.7)
+	anim_lib.add_animation("pixelate_out", pixelate_out)
+	
+	# Pixelate In
+	var pixelate_in = _create_fade_animation(1.0, 0.0)
+	pixelate_in.set_length(transition_duration * 0.7)
+	anim_lib.add_animation("pixelate_in", pixelate_in)
+	
+	# Circle Close (simulado con scale)
+	var circle_close = _create_scale_animation(Vector2(10, 10), Vector2(0, 0))
+	circle_close.set_length(transition_duration)
+	anim_lib.add_animation("circle_close", circle_close)
+	
+	# Circle Open
+	var circle_open = _create_scale_animation(Vector2(0, 0), Vector2(10, 10))
+	circle_open.set_length(transition_duration)
+	anim_lib.add_animation("circle_open", circle_open)
 	
 	animation_player.add_animation_library("", anim_lib)
 	
-	# Conectar señales
+	# Conectar seÃ±ales
 	animation_player.animation_finished.connect(_on_animation_finished)
 
-## Crea una animación de fade
+## Crea una animaciÃ³n de fade
 func _create_fade_animation(from_alpha: float, to_alpha: float) -> Animation:
 	var anim = Animation.new()
-	anim.length = transition_duration
 	
 	var track_idx = anim.add_track(Animation.TYPE_VALUE)
 	anim.track_set_path(track_idx, "ColorRect:color:a")
@@ -254,46 +304,21 @@ func _create_fade_animation(from_alpha: float, to_alpha: float) -> Animation:
 	
 	return anim
 
-## Crea una animación de wipe (desplazamiento)
-func _create_wipe_animation(from_left: bool, is_out: bool) -> Animation:
+## Crea una animaciÃ³n de wipe (desplazamiento)
+func _create_wipe_animation(from_offset: Vector2, to_offset: Vector2) -> Animation:
 	var anim = Animation.new()
-	anim.length = transition_duration
 	
-	# Obtener tamaño de la pantalla
-	var viewport_size = get_viewport().get_visible_rect().size
+	# Track para material shader (si lo implementamos)
+	# Por ahora usamos position
+	var track_idx = anim.add_track(Animation.TYPE_VALUE)
+	anim.track_set_path(track_idx, "ColorRect:position:x")
 	
-	# Track para posición X
-	var pos_track = anim.add_track(Animation.TYPE_VALUE)
-	anim.track_set_path(pos_track, "ColorRect:position:x")
+	var viewport_width = ProjectSettings.get_setting("display/window/size/viewport_width", 1920)
 	
-	# Track para asegurar que el ColorRect es del tamaño completo
-	var size_track = anim.add_track(Animation.TYPE_VALUE)
-	anim.track_set_path(size_track, "ColorRect:size:x")
-	anim.track_insert_key(size_track, 0.0, viewport_size.x)
+	anim.track_insert_key(track_idx, 0.0, from_offset.x * viewport_width)
+	anim.track_insert_key(track_idx, transition_duration, to_offset.x * viewport_width)
 	
-	# Calcular posiciones según dirección y tipo
-	var start_pos: float
-	var end_pos: float
-	
-	if is_out:  # Animación de salida (pantalla se oscurece)
-		if from_left:  # De izquierda a derecha
-			start_pos = -viewport_size.x
-			end_pos = 0
-		else:  # De derecha a izquierda
-			start_pos = viewport_size.x
-			end_pos = 0
-	else:  # Animación de entrada (pantalla se aclara)
-		if from_left:  # Sale por la derecha
-			start_pos = 0
-			end_pos = viewport_size.x
-		else:  # Sale por la izquierda
-			start_pos = 0
-			end_pos = -viewport_size.x
-	
-	anim.track_insert_key(pos_track, 0.0, start_pos)
-	anim.track_insert_key(pos_track, transition_duration, end_pos)
-	
-	# Track para alpha (siempre opaco durante wipe)
+	# Asegurar que el color_rect cubra todo
 	var alpha_track = anim.add_track(Animation.TYPE_VALUE)
 	anim.track_set_path(alpha_track, "ColorRect:color:a")
 	anim.track_insert_key(alpha_track, 0.0, 1.0)
@@ -301,13 +326,45 @@ func _create_wipe_animation(from_left: bool, is_out: bool) -> Animation:
 	
 	return anim
 
-## Callback cuando cualquier animación termina
+## Crea una animaciÃ³n de escala (para efecto de cÃ­rculo)
+func _create_scale_animation(from_scale: Vector2, to_scale: Vector2) -> Animation:
+	var anim = Animation.new()
+	
+	var track_idx = anim.add_track(Animation.TYPE_VALUE)
+	anim.track_set_path(track_idx, "ColorRect:scale")
+	anim.track_insert_key(track_idx, 0.0, from_scale)
+	anim.track_insert_key(track_idx, transition_duration, to_scale)
+	
+	# Centrar el pivot
+	var pivot_track = anim.add_track(Animation.TYPE_VALUE)
+	anim.track_set_path(pivot_track, "ColorRect:pivot_offset")
+	var viewport_size = Vector2(
+		ProjectSettings.get_setting("display/window/size/viewport_width", 1920),
+		ProjectSettings.get_setting("display/window/size/viewport_height", 1080)
+	)
+	anim.track_insert_key(pivot_track, 0.0, viewport_size / 2)
+	
+	return anim
+
+## Callback cuando cualquier animaciÃ³n termina
 func _on_animation_finished(anim_name: String) -> void:
-	if anim_name.ends_with("_out"):
+	if anim_name.ends_with("_out") or anim_name == "circle_close":
 		_on_transition_out_complete()
-	elif anim_name.ends_with("_in"):
+	elif anim_name.ends_with("_in") or anim_name == "circle_open":
 		_on_transition_in_complete()
 
-## Verifica si está en proceso de transición
+## Verifica si estÃ¡ en proceso de transiciÃ³n
 func is_transitioning() -> bool:
 	return _is_transitioning
+
+## Hace un fade sin cambiar de escena (útil para transiciones internas)
+func fade_only() -> void:
+	if _is_transitioning:
+		return
+	
+	_is_transitioning = true
+	_target_scene_path = ""  # Sin cambio de escena
+	_transition_type = TransitionType.FADE
+	
+	color_rect.visible = true
+	animation_player.play("fade_out")

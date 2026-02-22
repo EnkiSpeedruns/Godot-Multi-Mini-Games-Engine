@@ -3,6 +3,8 @@ extends CharacterBody2D
 
 ## Walker - Enemigo básico que patrulla
 
+@export var death_sound: AudioStream
+
 @export_group("Movement")
 @export var move_speed: float = 50.0
 @export var patrol_distance: float = 200.0
@@ -102,7 +104,8 @@ func _on_attack_landed(_hurtbox: HurtboxComponent) -> void:
 func _on_died() -> void:
 	if is_dead:
 		return
-
+	if death_sound:
+		AudioManager.play_sfx(death_sound)
 	is_dead = true
 	set_physics_process(false)
 

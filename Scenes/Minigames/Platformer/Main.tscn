@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://buv1b8wh4f64v" path="res://Scenes/Minigames/Platformer/Player/Player.tscn" id="3_e06ki"]
 [ext_resource type="PackedScene" uid="uid://cfaqhbrr0xqso" path="res://Components/CameraViewComponents/CameraConfiner.tscn" id="3_niqa6"]
 [ext_resource type="Script" uid="uid://qwdh201anovw" path="res://Scenes/Minigames/Platformer/Rooms/room_manager.gd" id="4_s5bhv"]
+[ext_resource type="AudioStream" uid="uid://csppgxb0fpo8c" path="res://Resources/Audio/platformer/music/platformer_bgm.ogg" id="6_3s22s"]
 
 [node name="Main" type="Node" unique_id=1090932]
 script = ExtResource("1_en6ka")
@@ -19,4 +20,6 @@ position = Vector2(770, 636)
 [node name="HUD" parent="." unique_id=1053451188 instance=ExtResource("2_niqa6")]
 
 [node name="RoomManager" type="Node" parent="." unique_id=1472411729]
+process_mode = 3
 script = ExtResource("4_s5bhv")
+background_music = ExtResource("6_3s22s")

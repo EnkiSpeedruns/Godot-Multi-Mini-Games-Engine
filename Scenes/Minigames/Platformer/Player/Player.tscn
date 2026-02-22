@@ -2,10 +2,15 @@
 
 [ext_resource type="Script" uid="uid://bu104gynonrmg" path="res://Scenes/Minigames/Platformer/Player/player.gd" id="1_teqqs"]
 [ext_resource type="Texture2D" uid="uid://gcx6mkt8q0tg" path="res://Scenes/Minigames/Platformer/Resources/Sprites/spritesheet-characters-default.png" id="2_1ahp4"]
+[ext_resource type="AudioStream" uid="uid://dfx1om85rg0lo" path="res://Resources/Audio/platformer/sfx/stomp.ogg" id="2_713eu"]
+[ext_resource type="AudioStream" uid="uid://crn4gerikbjwe" path="res://Resources/Audio/platformer/sfx/player_die.ogg" id="3_aawfi"]
 [ext_resource type="Script" uid="uid://bg5flagp7krm8" path="res://Scenes/Minigames/Platformer/Player/camera_2d.gd" id="3_fpgny"]
 [ext_resource type="PackedScene" uid="uid://cdxtjgcdkdq2v" path="res://Components/HealthComponent/HealthComponent.tscn" id="3_pdmle"]
+[ext_resource type="AudioStream" uid="uid://c75id3fbntlsj" path="res://Resources/Audio/platformer/sfx/player_hurt.wav" id="4_a48bo"]
 [ext_resource type="PackedScene" uid="uid://knsvcusy1y5y" path="res://Components/InputBufferComponent/InputBufferComponent.tscn" id="4_iysjv"]
+[ext_resource type="AudioStream" uid="uid://bb2utne6mmwfc" path="res://Resources/Audio/platformer/sfx/player_jump.ogg" id="5_aawfi"]
 [ext_resource type="PackedScene" uid="uid://uj7rukar7v3r" path="res://Components/HurtboxComponent/HurtboxComponent.tscn" id="5_vrrxw"]
+[ext_resource type="AudioStream" uid="uid://d3sabwbl74ykt" path="res://Resources/Audio/platformer/sfx/sfx_movement_footsteps1a.wav" id="6_a48bo"]
 [ext_resource type="PackedScene" uid="uid://ctyxbyrktye4n" path="res://Components/HitBoxComponent/HitboxComponent.tscn" id="6_iysjv"]
 [ext_resource type="Script" uid="uid://dfh4rt4uc3ej7" path="res://Scenes/Minigames/Platformer/Player/States/state_machine.gd" id="7_nbi6e"]
 [ext_resource type="Script" uid="uid://dwqoaw32oww0x" path="res://Scenes/Minigames/Platformer/Player/States/idle.gd" id="8_c0dpq"]
@@ -96,15 +101,19 @@ size = Vector2(56, 28)
 [node name="Player" type="CharacterBody2D" unique_id=1032818968]
 z_index = 50
 script = ExtResource("1_teqqs")
+stomp_sound = ExtResource("2_713eu")
+death_sound = ExtResource("3_aawfi")
+hurt_sound = ExtResource("4_a48bo")
+jump_sound = ExtResource("5_aawfi")
+footstep_sound = ExtResource("6_a48bo")
 max_speed = 300.0
 jump_velocity = -700.0
-variable_jump_height = null
 min_jump_velocity = -50.0
 gravity = 900.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=759337342]
 sprite_frames = SubResource("SpriteFrames_nmkcy")
-animation = &"fall"
+animation = &"walk"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=670986198]
 position = Vector2(3, 27)
@@ -156,3 +165,7 @@ script = ExtResource("11_sf181")
 [node name="Hit" type="Node" parent="StateMachine" unique_id=2102870112]
 script = ExtResource("12_c0dpq")
 knockback_strength = Vector2(-400, -150)
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=628454189]
+
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]

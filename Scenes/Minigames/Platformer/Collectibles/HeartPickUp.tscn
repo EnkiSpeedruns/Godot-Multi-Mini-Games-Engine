@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://b4htogo7bnvj8" path="res://Scenes/Minigames/Platformer/Collectibles/heart_pick_up.gd" id="1_81ail"]
 [ext_resource type="Texture2D" uid="uid://csakq16p0oj2t" path="res://Scenes/Minigames/Platformer/Resources/Tile Sets/spritesheet-tiles-default.png" id="1_bqhbc"]
+[ext_resource type="AudioStream" uid="uid://di0mqlkuknhlv" path="res://Resources/Audio/platformer/sfx/heart_collect.wav" id="2_ckr10"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_81ail"]
 atlas = ExtResource("1_bqhbc")
@@ -24,6 +25,7 @@ radius = 20.024984
 [node name="HeartPickUp" type="Area2D" unique_id=1219037361]
 z_index = 60
 script = ExtResource("1_81ail")
+collect_sound = ExtResource("2_ckr10")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=318698996]
 sprite_frames = SubResource("SpriteFrames_ckr10")

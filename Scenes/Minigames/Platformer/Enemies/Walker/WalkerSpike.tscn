@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://qfmvg2o5pwhp" path="res://Scenes/Minigames/Platformer/Enemies/Walker/walker.gd" id="1_asp1b"]
 [ext_resource type="Texture2D" uid="uid://clqa8btouw3d8" path="res://Scenes/Minigames/Platformer/Resources/Sprites/spritesheet-enemies-default.png" id="2_gvynw"]
+[ext_resource type="AudioStream" uid="uid://crgcb5c2ucv7c" path="res://Resources/Audio/platformer/sfx/enemy_die.wav" id="2_qra1s"]
 [ext_resource type="PackedScene" uid="uid://cdxtjgcdkdq2v" path="res://Components/HealthComponent/HealthComponent.tscn" id="3_qra1s"]
 [ext_resource type="PackedScene" uid="uid://uj7rukar7v3r" path="res://Components/HurtboxComponent/HurtboxComponent.tscn" id="4_0m6go"]
 [ext_resource type="PackedScene" uid="uid://ctyxbyrktye4n" path="res://Components/HitBoxComponent/HitboxComponent.tscn" id="5_vilt3"]
@@ -43,6 +44,7 @@ size = Vector2(20, 36)
 [node name="Walker" type="CharacterBody2D" unique_id=984390830]
 collision_layer = 16
 script = ExtResource("1_asp1b")
+death_sound = ExtResource("2_qra1s")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=58254022]
 position = Vector2(-0.5, 14.5)
