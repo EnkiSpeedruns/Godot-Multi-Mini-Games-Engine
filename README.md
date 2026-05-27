@@ -7,13 +7,9 @@
 **Un laboratorio de minijuegos 2D en Godot 4.5** diseñado para enseñar buenas prácticas, arquitectura escalable y reutilización de componentes.  
 Cada minijuego introduce conceptos nuevos del motor, mientras que la base del proyecto mantiene un estándar limpio y profesional.
 
-👉 Ideal para: Autodidactas, educadores, estudiantes, o cualquiera que quiera ver Godot 4 en acción con código modular.
-
 ---
 
 ## ✨ Filosofía del Proyecto
-
-Este no es solo un conjunto de minijuegos sueltos. Es un **ecosistema** donde:
 
 - ✅ Los minijuegos se **integran sin tocar código existente** (solo registro en el GameManager).
 - ✅ Usamos **composición sobre herencia**: `Player` tiene un `HealthComponent`, no hereda de una clase base.
@@ -22,23 +18,6 @@ Este no es solo un conjunto de minijuegos sueltos. Es un **ecosistema** donde:
 - ✅ El menú principal se auto-genera a partir de un array de datos.
 
 > 📚 Lee la [hoja de ruta y documentación técnica](./proyecto_minijuegos_godot_roadmap.md) para entender la arquitectura completa.
-
----
-
-## 🧱 Estructura Base
-
-res://
-├── autoload/ # GameManager, AudioManager, SceneTransition
-
-├── components/ # Health, Hitbox, Movement, InputBuffer, ScreenWrap, etc.
-
-├── scenes/
-
-│ ├── main_menu/ # Menú dinámico, botones auto-generados
-
-│ └── minigames/ # Cada juego en su carpeta (platformer, snake, etc.)
-
-└── resources/ # Sprites, audio, fonts, thumbnails
 
 
 ---
@@ -88,8 +67,6 @@ res://
 2. Ejecuta la escena main_menu.tscn.
 
 3. ¡Explora los minijuegos disponibles!
-
-💡 ¿Primera vez con Godot 4? Revisa la guía de inicio rápido (próximamente).
 
 ## 🤝 ¿Cómo Contribuir?
 
